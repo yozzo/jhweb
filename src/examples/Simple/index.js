@@ -17,7 +17,7 @@ class Simple extends React.Component {
     // React will think that things have changed when they have not.
 
     this.state = {
-      cubeRotation: new THREE.Euler(),
+      cubeRotation: new THREE.Euler()
     };
 
     this._onAnimate = () => {

@@ -13,10 +13,10 @@ const ExampleViewer = ({ example, size }) => {
     exampleContent = (<ExampleComponent width={size.width} height={size.height} />);
     sourceButton = (<div key="src" id="button">
       <a
-        href={`https://github.com/toxicFork/react-three-renderer-example/blob/master/src/examples/${url}.js`}
+        href={`https://open.spotify.com/album/3ILBGXvUwP6kVni9wAFuCU`}
         target="_blank"
       >
-        View source
+        Listen on Spotify
       </a>
     </div>);
   }
