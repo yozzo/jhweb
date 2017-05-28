@@ -10,18 +10,48 @@ class AudioAnalyzer extends React.Component {
 
     constructor(props) {
         super(props);
+
         this.state = {
             boost: 0,
-            audioUrl: props.audioUrl
+            audioUrl: props.audioUrl,
+            playing: false
         };
     }
 
     componentDidMount() {
-        this.playAudio(this.state.audioUrl);
+
+        this.playAudio(this.props.audioUrl);
         this.timerID = setInterval(
             () => this.getBoost(),
             10
         );
+
+        this.setState({
+            isPlaying: true,
+            audioUrl: this.props.audioUrl
+        })
+    }
+
+    componentDidUpdate() {
+        if (this.state.isPlaying && this.state.audioUrl !== this.props.audioUrl) {
+            this.stopAudio();
+            clearInterval(this.timerID);
+
+            this.setState({
+                isPlaying: false,
+                audioUrl: this.props.audioUrl
+            });
+
+            this.playAudio(this.props.audioUrl);
+            this.timerID = setInterval(
+                () => this.getBoost(),
+                10
+            );
+
+            this.setState({
+                isPlaying: true
+            });
+        }
     }
 
     /**
@@ -106,20 +136,20 @@ class AudioAnalyzer extends React.Component {
         };
 
         request.send();
-        // this.state.boost = boost;
     }
 
     getBoost() {
         this.setState({
             boost: boost
         });
-        // return boost;
     }
 
     stopAudio() {
-        source.disconnect(analyser);
-        analyser.disconnect(sourceJs);
-        source.disconnect(context.destination);
+        if (typeof source !== 'undefined') {
+            source.disconnect(analyser);
+            analyser.disconnect(sourceJs);
+            source.disconnect(context.destination);
+        }
     }
     
     componentWillUnmount() {
@@ -128,8 +158,16 @@ class AudioAnalyzer extends React.Component {
     }
 
     render() {
+        const ExampleComponent = this.props.children.props.videoInput;
+
         return(
-            <input id="audioValue" type="hidden" value={this.state.boost}/>
+            <div id="audioValue" data={this.state.boost}>
+                <ExampleComponent
+                    width={this.props.children.props.width}
+                    height={this.props.children.props.height}
+                    audioData={this.state.boost}
+                />
+            </div>
         )
     }
 }

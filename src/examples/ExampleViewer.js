@@ -1,19 +1,38 @@
 import React from 'react';
 import sizeMe from 'react-sizeme';
+import AudioAnalyser from './AudioVisualizer/audio'
 
 const ExampleViewer = ({ example, size }) => {
   let sourceButton = null;
   let exampleContent = null;
+  let media = '';
 
   if (example) {
+
+    if (example.media) {
+        media = example.media
+    }
+
     const {
       component: ExampleComponent,
       url,
     } = example;
-    exampleContent = (<ExampleComponent width={size.width} height={size.height} />);
+
+    exampleContent = (
+      <div>
+        <AudioAnalyser audioUrl={media}>
+          <ExampleComponent
+              width={size.width}
+              height={size.height}
+              videoInput={ExampleComponent}
+          />
+        </AudioAnalyser>
+      </div>
+
+    );
     sourceButton = (<div key="src" id="button">
       <a
-        href={`https://open.spotify.com/album/3ILBGXvUwP6kVni9wAFuCU`}
+        href={example.spotifyUrl}
         target="_blank"
       >
         Listen on Spotify

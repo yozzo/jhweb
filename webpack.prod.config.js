@@ -1,6 +1,5 @@
 import path from 'path';
 import webpack from 'webpack';
-import StaticSiteGeneratorPlugin from 'static-site-generator-webpack-plugin';
 
 const outPath = path.join(__dirname, 'pages');
 
@@ -12,9 +11,6 @@ const pluginsWithoutUglify = [
   }),
   new webpack.optimize.CommonsChunkPlugin(
     path.join('js', 'bundle-commons.js'), ['app', 'advanced']),
-  new StaticSiteGeneratorPlugin({
-      crawl: true
-    })
 ];
 
 const plugins = pluginsWithoutUglify.concat([
@@ -47,8 +43,6 @@ export default {
   output: {
     path: outPath,
     filename: path.join('js', 'bundle-[name].js'),
-    publicPath: '/',
-    libraryTarget: 'umd'
   },
   module: {
     loaders: [

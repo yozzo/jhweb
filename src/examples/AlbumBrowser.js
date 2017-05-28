@@ -23,12 +23,12 @@ const examples = [
     url: 'Simple/index',
     slug: 'webgl_simple'
   },
-  // {
-  //   name: 'Cloth',
-  //   component: ClothExample,
-  //   url: 'AnimationCloth/index',
-  //   slug: 'webgl_cloth'
-  // },
+  {
+    name: 'Cloth',
+    component: ClothExample,
+    url: 'AnimationCloth/index',
+    slug: 'webgl_cloth'
+  },
   // {
   //   name: 'Camera',
   //   component: CameraExample,
@@ -100,13 +100,17 @@ const examples = [
     name: 'Empire Sounds',
     component: EmpireSounds,
     url: 'EmpireSounds',
-    slug: 'empire_sounds'
+    slug: 'empire_sounds',
+    media: 'data/02 Empire Sounds(Shorter_Immersive_Website_Version).mp3',
+    spotifyUrl: 'https://open.spotify.com/album/3ILBGXvUwP6kVni9wAFuCU'
   },
   {
     name: 'Biomes',
     component: Biomes,
     url: 'biomes',
-    slug: 'biomes'
+    slug: 'biomes',
+    media: 'data/60 BPM.mp3',
+    spotifyUrl: 'https://open.spotify.com/album/3ILBGXvUwP6kVni9wAFuCU'
   }
 ];
 

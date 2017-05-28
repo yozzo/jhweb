@@ -14,11 +14,11 @@ class Biomes extends React.Component {
     constructor(props, context) {
         super(props, context);
 
-        const audioData = {url: 'data/04 Biomes(Shorter_Immersive_Website_Version).mp3'};
-        
-        this.audio = new AudioAnalyzer(audioData);
-        
-        this.audio.playAudio();
+        // const audioData = {url: 'data/04 Biomes(Shorter_Immersive_Website_Version).mp3'};
+        //
+        // this.audio = new AudioAnalyzer(audioData);
+        //
+        // this.audio.playAudio();
 
         this.cameraPosition = new THREE.Vector3(0, 0, 5);
 
@@ -49,33 +49,36 @@ class Biomes extends React.Component {
                 )
             });
 
-            var boost = 0;
-
-            setInterval(
-                getBoost,
-                10
-            );
-
-            function getBoost() {
-
-                this.audioLevels =  $('#audioValue').val()
-
-                // boost = $('#audioValue').val();
-            }
+            // var boost = 0;
+            //
+            // setInterval(
+            //     getBoost,
+            //     10
+            // );
+            //
+            // function getBoost() {
+            //
+            //     this.audioLevels =  $('#audioValue').val()
+            //
+            //     // boost = $('#audioValue').val();
+            // }
         };
 
 
     }
 
     componentWillUnmount() {
-        this.audio.stopAudio();
+        // this.audio.stopAudio();
     }
 
     render() {
         const {
             width,
             height,
+            audioData
         } = this.props;
+
+        // debugger;
 
         // or you can use:
         // width = window.innerWidth
@@ -107,18 +110,18 @@ class Biomes extends React.Component {
                     rotation={this.state.cubeRotation}
                 >
                     <boxGeometry
-                        width={1}
-                        height={1}
-                        depth={1}
+                        width={this.props.audioData/10}
+                        height={this.props.audioData/10}
+                        depth={this.props.audioData/10}
                     />
                     <meshBasicMaterial
-                        color={0x00ff00}
+                        color={1000000/this.props.audioData}
                     />
                 </mesh>
             </scene>
 
             </React3>
-                <AudioAnalyzer audioUrl={'data/04 Biomes.mp3'}/>
+                {/*<AudioAnalyzer audioUrl={'data/04 Biomes.mp3'}/>*/}
                 </div>
         );
     }
