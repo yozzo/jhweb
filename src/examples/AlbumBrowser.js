@@ -13,22 +13,23 @@ import Physics from './Physics/index';
 import PhysicsMousePick from './Physics/mousePick';
 import BenchmarkRotatingCubes from './Benchmark/RotatingCubes';
 import RotatingCubesDirectUpdates from './Benchmark/RotatingCubesDirectUpdates';
+
 import EmpireSounds from './T2-EmpireSounds/index';
 import Biomes from './T4-Biomes/index';
 
 const examples = [
-  {
-    name: 'Simple',
-    component: SimpleExample,
-    url: 'Simple/index',
-    slug: 'webgl_simple'
-  },
-  {
-    name: 'Cloth',
-    component: ClothExample,
-    url: 'AnimationCloth/index',
-    slug: 'webgl_cloth'
-  },
+  // {
+  //   name: 'Simple',
+  //   component: SimpleExample,
+  //   url: 'Simple/index',
+  //   slug: 'webgl_simple'
+  // },
+  // {
+  //   name: 'Cloth',
+  //   component: ClothExample,
+  //   url: 'AnimationCloth/index',
+  //   slug: 'webgl_cloth'
+  // },
   // {
   //   name: 'Camera',
   //   component: CameraExample,
@@ -109,7 +110,7 @@ const examples = [
     component: Biomes,
     url: 'biomes',
     slug: 'biomes',
-    media: 'data/60 BPM.mp3',
+    media: 'data/04 Biomes(Shorter_Immersive_Website_Version).mp3',
     spotifyUrl: 'https://open.spotify.com/album/3ILBGXvUwP6kVni9wAFuCU'
   }
 ];

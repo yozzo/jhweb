@@ -120,8 +120,8 @@ class Ribbons extends React.Component {
         // gui.add(guiParams, 'clumpiness', 0, 1);
         // gui.add(guiParams, 'ribbonWidth', 1, 20).name('Ribbon Width');
 
-        $('body').css('background', '#eaeaea');
-        $('.dg').css('display', 'none');
+        // $('body').css('background-image', 'data/006.jpg'); //#eaeaea
+        // $('.dg').css('display', 'none');
 
         //INIT THREEJS WORLD
         camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
@@ -151,6 +151,7 @@ class Ribbons extends React.Component {
 
             console.log('is it?', $('#ribbons').length);
             $('#ribbons').append( renderer.domElement );
+            $('#ribbons').css('background', 'url(data/006.jpg)');
             // $('#empire-sounds').append( stats.domElement  );
         }, 100);
 
