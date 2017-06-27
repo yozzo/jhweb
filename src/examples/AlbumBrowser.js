@@ -105,7 +105,7 @@ const examples = [
     component: EmpireSounds,
     url: 'EmpireSounds',
     slug: 'empire_sounds',
-    media: 'data/02 Empire Sounds(Shorter_Immersive_Website_Version).mp3',
+    // media: 'data/02 Empire Sounds(Shorter_Immersive_Website_Version).mp3',
     spotifyUrl: 'https://open.spotify.com/album/3ILBGXvUwP6kVni9wAFuCU'
   },
   {
@@ -113,7 +113,7 @@ const examples = [
     component: Biomes,
     url: 'biomes',
     slug: 'biomes',
-    media: 'data/04 Biomes(Shorter_Immersive_Website_Version).mp3',
+    // media: 'data/04 Biomes(Shorter_Immersive_Website_Version).mp3',
     spotifyUrl: 'https://open.spotify.com/album/3ILBGXvUwP6kVni9wAFuCU'
   }
 ];
