@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
+import ReactMusicPlayer from './ReactMusicPlayer';
 import ExampleViewer from './ExampleViewer';
 
 import SimpleExample from './Simple/index';
@@ -16,6 +17,8 @@ import RotatingCubesDirectUpdates from './Benchmark/RotatingCubesDirectUpdates';
 
 import EmpireSounds from './T2-EmpireSounds/index';
 import Biomes from './T4-Biomes/index';
+
+
 
 const examples = [
   // {
@@ -115,10 +118,35 @@ const examples = [
   }
 ];
 
+const songs = [
+    {
+        url: 'data/04 Biomes(Shorter_Immersive_Website_Version).mp3',
+        cover: 'path/to/jpeg',
+        component: Biomes,
+        slug: 'biomes',
+
+        artist: {
+            name: 'A',
+            song: '1'
+        }
+    },
+    {
+        url: 'data/02 Empire Sounds(Shorter_Immersive_Website_Version).mp3',
+        component: EmpireSounds,
+        slug: 'empire_sounds',
+
+        artist: {
+            name: 'B',
+            song: '2'
+        }
+    }
+];
+
 const AlbumBrowser = ({ params }) => {
   const activeExample = params.slug && examples.find(example => example.slug === params.slug);
   return (
     <div>
+      <ReactMusicPlayer songs={songs}/>
       <div id="panel" className="collapsed">
         <div id="content">
           <div>
