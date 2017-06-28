@@ -31,11 +31,11 @@ class ReactMusicPlayer extends Component {
 
     setProgress = (e) => {
         let target = e.target.nodeName === 'SPAN' ? e.target.parentNode : e.target;
-        let width = target.clientWidth;
+        let height = target.clientHeight;
         let rect = target.getBoundingClientRect();
-        let offsetX = e.clientX - rect.left;
+        let offsetY = e.clientY - rect.top;
         let duration = this.refs.player.duration;
-        let currentTime = (duration * offsetX) / width;
+        let currentTime = (duration * offsetY) / height;
         let progress = (currentTime * 100) / duration;
 
         this.refs.player.currentTime = currentTime;
@@ -120,6 +120,9 @@ class ReactMusicPlayer extends Component {
 
         return (
             <div className="player-container">
+                <div className="player-progress-container" onClick={this.setProgress}>
+                    <span className="player-progress-value" style={{height: progress + '%'}}></span>
+                </div>
                 <audio src={active.url} autoPlay={this.state.play} preload="auto" ref="player"></audio>
 
                 <div className={coverClass} style={{backgroundImage: 'url('+ active.cover +')'}}></div>
@@ -129,22 +132,15 @@ class ReactMusicPlayer extends Component {
                     <h3 className="artist-song-name">{active.artist.song}</h3>
                 </div>
 
-                <div className="player-progress-container" onClick={this.setProgress}>
-                    <span className="player-progress-value" style={{width: progress + '%'}}></span>
-                </div>
-
-
                 <div className="player-options">
                     <div className="player-buttons player-controls">
-                        <button onClick={this.toggle} className="player-btn big" title="Play/Pause">
-                            <i className={playPauseClass} />
-                        </button>
-
-
-
                         <Link to={`/${active.slug}`} onClick={this.previous} className="player-btn medium" title="Previous Song">
                             <i className="fa fa-backward" />
                         </Link>
+
+                        <button onClick={this.toggle} className="player-btn big" title="Play/Pause">
+                            <i className={playPauseClass} />
+                        </button>
 
                         <Link to={`/${active.slug}`} onClick={this.next} className="player-btn medium" title="Next Song">
                             <i className="fa fa-forward" />

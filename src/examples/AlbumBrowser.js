@@ -147,32 +147,32 @@ const AlbumBrowser = ({ params }) => {
   return (
     <div>
       <ReactMusicPlayer songs={songs}/>
-      <div id="panel" className="collapsed">
-        <div id="content">
-          <div>
-            {examples.map((example, index) => {
-              if (example.separator) {
-                return (<h2 key={index}>{example.name}</h2>);
-              }
+      {/*<div id="panel" className="collapsed">*/}
+        {/*<div id="content">*/}
+          {/*<div>*/}
+            {/*{examples.map((example, index) => {*/}
+              {/*if (example.separator) {*/}
+                {/*return (<h2 key={index}>{example.name}</h2>);*/}
+              {/*}*/}
 
-              if (example.advanced) {
-                return (<div key={index}>
-                  <a href={example.page} target="blank">{example.name}</a> (new tab)
-                </div>);
-              }
+              {/*if (example.advanced) {*/}
+                {/*return (<div key={index}>*/}
+                  {/*<a href={example.page} target="blank">{example.name}</a> (new tab)*/}
+                {/*</div>);*/}
+              {/*}*/}
 
-              return (<Link
-                to={`/${example.slug}`}
-                key={index}
-                className={"link track-" + index}
-                activeClassName="selected"
-              >
-                {example.name}
-              </Link>);
-            })}
-          </div>
-        </div>
-      </div>
+              {/*return (<Link*/}
+                {/*to={`/${example.slug}`}*/}
+                {/*key={index}*/}
+                {/*className={"link track-" + index}*/}
+                {/*activeClassName="selected"*/}
+              {/*>*/}
+                {/*{example.name}*/}
+              {/*</Link>);*/}
+            {/*})}*/}
+          {/*</div>*/}
+        {/*</div>*/}
+      {/*</div>*/}
       <ExampleViewer example={activeExample} />
     </div>
   );
