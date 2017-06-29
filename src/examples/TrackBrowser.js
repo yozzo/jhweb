@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
-import ReactMusicPlayer from './ReactMusicPlayer';
-import ExampleViewer from './ExampleViewer';
+import AudioPlayer from './AudioPlayer';
+import TrackViewer from './TrackViewer';
 
 import SimpleExample from './Simple/index';
 import ManualRenderingExample from './ManualRendering/index';
@@ -142,11 +142,11 @@ const songs = [
     }
 ];
 
-const AlbumBrowser = ({ params }) => {
+const TrackBrowser = ({ params }) => {
   const activeExample = params.slug && examples.find(example => example.slug === params.slug);
   return (
     <div>
-      <ReactMusicPlayer songs={songs}/>
+      <AudioPlayer songs={songs}/>
       {/*<div id="panel" className="collapsed">*/}
         {/*<div id="content">*/}
           {/*<div>*/}
@@ -173,13 +173,13 @@ const AlbumBrowser = ({ params }) => {
           {/*</div>*/}
         {/*</div>*/}
       {/*</div>*/}
-      <ExampleViewer example={activeExample} />
+      <TrackViewer example={activeExample} />
     </div>
   );
 };
 
-AlbumBrowser.propTypes = {
+TrackBrowser.propTypes = {
   params: React.PropTypes.object.isRequired
 };
 
-export default AlbumBrowser;
+export default TrackBrowser;

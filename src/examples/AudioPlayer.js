@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import classnames from 'classnames';
 import shuffle from 'shuffle-array';
 
-class ReactMusicPlayer extends Component {
+class AudioPlayer extends Component {
     state = {
         active: this.props.songs[0],
         current: 0,
@@ -120,9 +120,12 @@ class ReactMusicPlayer extends Component {
 
         return (
             <div className="player-container">
-                <div className="player-progress-container" onClick={this.setProgress}>
+
+                <div className="player-progress-container-wrapper" onClick={this.setProgress}>
                     <span className="player-progress-value" style={{height: progress + '%'}}></span>
+                    <div className="player-progress-container"></div>
                 </div>
+
                 <audio src={active.url} autoPlay={this.state.play} preload="auto" ref="player"></audio>
 
                 <div className={coverClass} style={{backgroundImage: 'url('+ active.cover +')'}}></div>
@@ -167,9 +170,9 @@ class ReactMusicPlayer extends Component {
     }
 }
 
-ReactMusicPlayer.propTypes = {
+AudioPlayer.propTypes = {
     autoplay: PropTypes.bool,
     songs: PropTypes.array.isRequired
 };
 
-export default ReactMusicPlayer;
+export default AudioPlayer;
