@@ -4,7 +4,7 @@ import PIXI from '../../ref/pixi.js';
 import dat from '../../ref/dat.gui.min.js';
 
 
-class Biomes extends React.Component {
+class Ruqia extends React.Component {
     static propTypes = {
         width: React.PropTypes.number.isRequired,
         height: React.PropTypes.number.isRequired
@@ -312,4 +312,4 @@ class Biomes extends React.Component {
     }
 }
 
-export default Biomes;
+export default Ruqia;

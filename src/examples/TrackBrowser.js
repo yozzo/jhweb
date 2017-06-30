@@ -17,6 +17,7 @@ import RotatingCubesDirectUpdates from './Benchmark/RotatingCubesDirectUpdates';
 
 import EmpireSounds from './T2-EmpireSounds/index';
 import Biomes from './T4-Biomes/index';
+import Ruqia from './T1-Ruqia/index';
 
 
 
@@ -120,13 +121,13 @@ const examples = [
 
 const songs = [
     {
-        url: 'data/04 Biomes(Shorter_Immersive_Website_Version).mp3',
+        url: 'data/01 Ruqia(Shorter_Immersive_Website_Version).mp3',
         cover: 'path/to/jpeg',
-        component: Biomes,
-        slug: 'biomes',
+        component: Ruqia,
+        slug: 'ruqia',
 
         track: {
-            name: '04/ Biomes',
+            name: '01/ Ruqia',
             spotifyUrl: 'https://open.spotify.com/album/3ILBGXvUwP6kVni9wAFuCU'
         }
     },
@@ -137,6 +138,17 @@ const songs = [
 
         track: {
             name: '02/ Empire Sounds',
+            spotifyUrl: 'https://open.spotify.com/album/3ILBGXvUwP6kVni9wAFuCU'
+        }
+    },
+    {
+        url: 'data/04 Biomes(Shorter_Immersive_Website_Version).mp3',
+        cover: 'path/to/jpeg',
+        component: Biomes,
+        slug: 'biomes',
+
+        track: {
+            name: '04/ Biomes',
             spotifyUrl: 'https://open.spotify.com/album/3ILBGXvUwP6kVni9wAFuCU'
         }
     }
