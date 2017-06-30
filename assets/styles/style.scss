@@ -9,16 +9,15 @@
 //    height: 100%;
 //}
 //
-//body {
-//    background-color: $color-white;
+body {
+    background-color: gray;
 //    margin: 0px;
 //    height: 100%;
 //    color: #555;
-//    font-family: 'bentonsansregular';
 //    font-size: 15px;
 //    line-height: 18px;
 //    overflow: hidden;
-//}
+}
 //
 //h1 {
 //    margin-top: 30px;
@@ -204,13 +203,12 @@
     z-index: 5;
     bottom: 0;
     left: 0;
-    width: 435px;
-    height: 100vh;
-    margin: 0 auto;
+    color: $color-white;
+    width: 436px;
+    height: 95vh;
+    margin: 20px auto;
     overflow: hidden;
 }
-
-
 
 .player-cover {
     height: 160px;
@@ -219,78 +217,87 @@
     transition: height .4s;
 }
 
-.artist-info {
-    padding: 60px 35px 35px;
-    position: absolute;
-    bottom: 90px;
-    left: 19px;
-}
-
-.artist-name,
-.artist-song-name {
-    margin: 0;
-}
-
-.artist-name {
-    margin-bottom: 5px;
-
-    font-size: 32px;
-    font-weight: 400;
-}
-
-.artist-song-name {
-    font-size: 18px;
-    font-weight: 400;
-}
-
-.player-progress-container {
-    position: absolute;
-    left: 10px;
-    top: 0;
-    width: 2px;
-    height: 80%;
-    margin: 0 auto;
-
-    background-color: rgba(255, 255, 255, 0.4);
-    border-radius: 40px;
-
-    &-wrapper {
+.track {
+    &-info {
+        font-family: bentonsansbook;
+        padding: $gutter $gutter $gutter 0;
         position: absolute;
-        top: 10px;
-        left: 10px;
-        height: 100vh;
-        width: 30px;
-        background: pink;
-        cursor: pointer;
+        left: 42px;
+        bottom: 100px;
+        float: left;
+        width: 74%;
+    }
+
+    &-name {
+        margin: 15px 0;
+        font-size: 30px;
+        font-weight: 400;
+    }
+
+    &-tag,
+    &-link {
+        font-family: bentonsansmedium;
+        color: $color-white;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 7px;
+    }
+
+    &-link:hover {
+        text-decoration: none;
     }
 }
 
-.player-progress-value {
-    position: absolute;
-    width: 2px;
-    top: 0;
-    left: 10px;
-    bottom: 0;
-    background-color: $color-white;
-    z-index: 2;
+.player-progress {
 
-    &:after {
+    &-container-wrapper {
+        position: relative;
+        float: left;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 42px;
+        cursor: pointer;
+    }
+
+    &-container {
         position: absolute;
-        bottom: -2px;
-        right: -2px;
-        content: '';
-        width: 6px;
-        height: 6px;
+        left: $gutter;
+        top: 0;
+        width: 2px;
+        height: 100%;
+        margin: 0 auto;
+        background-color: rgba(255, 255, 255, 0.4);
+        border-radius: 40px;
+    }
 
-        border-radius: 50%;
+    &-value {
+        position: absolute;
+        width: 2px;
+        top: 0;
+        left: $gutter;
+        bottom: 0;
         background-color: $color-white;
+        z-index: 2;
+
+        &:after {
+            position: absolute;
+            bottom: -3px;
+            right: -2px;
+            content: '';
+            width: 6px;
+            height: 6px;
+
+            border-radius: 50%;
+            background-color: $color-white;
+        }
     }
 }
 
 .player-options {
     display: flex;
     justify-content: space-between;
-    padding: 40px 0 20px;
+    padding: 2*$gutter 0 $gutter;
     width: 365px;
     margin: 0 auto;
     position: absolute;

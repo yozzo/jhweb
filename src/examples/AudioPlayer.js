@@ -121,18 +121,17 @@ class AudioPlayer extends Component {
         return (
             <div className="player-container">
 
-                <div className="player-progress-container-wrapper" onClick={this.setProgress}>
+                <span className="player-progress-container-wrapper" onClick={this.setProgress}>
                     <span className="player-progress-value" style={{height: progress + '%'}}></span>
                     <div className="player-progress-container"></div>
-                </div>
+                </span>
 
                 <audio src={active.url} autoPlay={this.state.play} preload="auto" ref="player"></audio>
 
-                <div className={coverClass} style={{backgroundImage: 'url('+ active.cover +')'}}></div>
-
-                <div className="artist-info">
-                    <h2 className="artist-name">{active.artist.name}</h2>
-                    <h3 className="artist-song-name">{active.artist.song}</h3>
+                <div className="track-info">
+                    <span className="track-tag">Playing Excerpt</span>
+                    <h2 className="track-name">{active.track.name}</h2>
+                    <a href={active.track.spotifyUrl} className="track-link" target="_blank">Full Listen</a>
                 </div>
 
                 <div className="player-options">

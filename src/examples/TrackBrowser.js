@@ -125,9 +125,9 @@ const songs = [
         component: Biomes,
         slug: 'biomes',
 
-        artist: {
-            name: 'A',
-            song: '1'
+        track: {
+            name: '04/ Biomes',
+            spotifyUrl: 'https://open.spotify.com/album/3ILBGXvUwP6kVni9wAFuCU'
         }
     },
     {
@@ -135,9 +135,9 @@ const songs = [
         component: EmpireSounds,
         slug: 'empire_sounds',
 
-        artist: {
-            name: 'B',
-            song: '2'
+        track: {
+            name: '02/ Empire Sounds',
+            spotifyUrl: 'https://open.spotify.com/album/3ILBGXvUwP6kVni9wAFuCU'
         }
     }
 ];

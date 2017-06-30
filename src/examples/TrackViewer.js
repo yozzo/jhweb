@@ -28,16 +28,7 @@ const ExampleViewer = ({ example, size }) => {
           />
         </AudioAnalyser>
       </div>
-
     );
-    sourceButton = (<div key="src" id="button">
-      <a
-        href={example.spotifyUrl}
-        target="_blank"
-      >
-        Listen on Spotify
-      </a>
-    </div>);
   }
 
   return (
