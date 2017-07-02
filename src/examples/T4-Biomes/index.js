@@ -59,6 +59,10 @@ class Biomes extends React.Component {
             document.getElementById('biomes').appendChild(renderer.view);
         }, 300);
 
+        if ($('.dg').length) {
+            $('.dg').remove();
+        }
+
         var gui = new dat.GUI({
             //height : 5 * 32 - 1,
 

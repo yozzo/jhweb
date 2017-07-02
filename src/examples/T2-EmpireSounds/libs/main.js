@@ -105,6 +105,10 @@ class Ribbons extends React.Component {
 
     function init() {
 
+        if ($('.dg').length) {
+            $('.dg').remove();
+        }
+
         //INIT DAT GUI
         var gui = new dat.GUI();
         gui.add(guiParams, 'noiseScale', 100, 5000).name('Turbulence');

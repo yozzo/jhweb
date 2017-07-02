@@ -47,7 +47,7 @@ class Ruqia extends React.Component {
 
     playShaderAnimation() {
         var renderer = PIXI.autoDetectRenderer(630, 410);
-        renderer.view.style.position = "absolute"
+        renderer.view.style.position = "absolute";
         renderer.view.style.width = window.innerWidth + "px";
         renderer.view.style.height = window.innerHeight + "px";
         renderer.view.style.display = "block";
@@ -58,6 +58,10 @@ class Ruqia extends React.Component {
         setTimeout(function(){
             document.getElementById('biomes').appendChild(renderer.view);
         }, 300);
+
+        if ($('.dg').length) {
+            $('.dg').remove();
+        }
 
         var gui = new dat.GUI({
             //height : 5 * 32 - 1,

@@ -131,7 +131,9 @@ class AudioPlayer extends Component {
                 <div className="track-info">
                     <span className="track-tag">Playing Excerpt</span>
                     <h2 className="track-name">{active.track.name}</h2>
-                    <a href={active.track.spotifyUrl} className="track-link" target="_blank">Full Listen</a>
+                    <div className="track-link-wrapper">
+                        <a href={active.track.spotifyUrl} className="track-link" target="_blank">Full Listen</a>
+                    </div>
                 </div>
 
                 <div className="player-options">

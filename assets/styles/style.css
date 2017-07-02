@@ -24,25 +24,35 @@ body {
   transition: height .4s; }
 
 .track-info {
-  font-family: bentonsansbook;
+  font-family: bentonsanslight;
   padding: 20px 20px 20px 0;
   position: absolute;
+  z-index: 2;
   left: 42px;
   bottom: 100px;
   float: left;
   width: 74%; }
+
 .track-name {
-  margin: 15px 0;
+  margin: 12px 0;
   font-size: 30px;
   font-weight: 400; }
-.track-tag, .track-link {
-  font-family: bentonsansmedium;
+
+.track-tag,
+.track-link {
+  font-family: bentonsanslight;
   color: #f5f5f5;
   font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: 7px; }
+  letter-spacing: 7px;
+  margin-right: -7px; }
+
 .track-link:hover {
   text-decoration: none; }
+
+.track-link-wrapper {
+  overflow: hidden;
+  position: fixed; }
 
 .player-progress-container-wrapper {
   position: relative;
@@ -52,6 +62,7 @@ body {
   height: 100%;
   width: 42px;
   cursor: pointer; }
+
 .player-progress-container {
   position: absolute;
   left: 20px;
@@ -61,6 +72,7 @@ body {
   margin: 0 auto;
   background-color: rgba(255, 255, 255, 0.4);
   border-radius: 40px; }
+
 .player-progress-value {
   position: absolute;
   width: 2px;
@@ -82,12 +94,12 @@ body {
 .player-options {
   display: flex;
   justify-content: space-between;
-  padding: 40px 0 20px;
+  padding: 20px 0 0;
   width: 365px;
   margin: 0 auto;
   position: absolute;
   bottom: 0;
-  left: 50px; }
+  left: 42px; }
 
 .player-buttons {
   display: inline-flex;
@@ -111,12 +123,13 @@ body {
   .player-btn.active {
     color: #838C92; }
   .player-btn.big {
-    width: 70px;
-    height: 70px; }
+    width: 40px;
+    height: 40px;
+    background: #f5f5f5; }
     .player-btn.big i {
       font-size: 36px; }
   .player-btn.medium {
-    width: 50px;
+    width: 16px;
     height: 50px; }
     .player-btn.medium i {
       font-size: 15px; }
@@ -125,10 +138,37 @@ body {
   .player-btn:disabled {
     opacity: .5; }
 
+.fa-forward {
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNy4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNjA4Ljk3cHgiIGhlaWdodD0iNjA5LjA2MXB4IiB2aWV3Qm94PSIwIDAgNjA4Ljk3IDYwOS4wNjEiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDYwOC45NyA2MDkuMDYxIg0KCSB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwb2x5Z29uIGZpbGw9IiNGRkZGRkYiIHBvaW50cz0iNDUxLjI2LDU2LjcyNCA0NTEuMjYsMjgxLjIyOCAxMDAuNDczLDU2LjcyNCAxMDAuNDczLDU0Ny44MjYgNDUxLjI2LDMyMy4zMjIgNDUxLjI2LDU0Ny44MjYgDQoJNTIxLjQxNyw1NDcuODI2IDUyMS40MTcsNTYuNzI0ICIvPg0KPC9zdmc+DQo=") no-repeat;
+  background-size: contain; }
+
+.fa-backward {
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNy4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNjA4Ljk3cHgiIGhlaWdodD0iNjA5LjA2MXB4IiB2aWV3Qm94PSIxMTYuMDUxIDI4OC41NjQgNjA4Ljk3IDYwOS4wNjEiDQoJIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMTE2LjA1MSAyODguNTY0IDYwOC45NyA2MDkuMDYxIiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwb2x5Z29uIGZpbGw9IiNGRkZGRkYiIHBvaW50cz0iMjgwLjYzLDg0MC44MjYgMjgwLjYzLDYxNi4zMjIgNjMxLjQxNyw4NDAuODI2IDYzMS40MTcsMzQ5LjcyNCAyODAuNjMsNTc0LjIyOCAyODAuNjMsMzQ5LjcyNCANCgkyMTAuNDczLDM0OS43MjQgMjEwLjQ3Myw4NDAuODI2ICIvPg0KPC9zdmc+DQo=") no-repeat;
+  background-size: contain; }
+
+.fa-play {
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNy4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNjA4Ljk3cHgiIGhlaWdodD0iNjA5LjA2MXB4IiB2aWV3Qm94PSIwIDAgNjA4Ljk3IDYwOS4wNjEiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDYwOC45NyA2MDkuMDYxIg0KCSB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwYXRoIGQ9Ik0xMTYuNjI1LDU4LjI1djQ5My41TDUwNC4zNzUsMzA1TDExNi42MjUsNTguMjV6Ii8+DQo8L3N2Zz4NCg==") no-repeat;
+  background-size: contain; }
+
+.fa-pause {
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNy4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNjA4Ljk3cHgiIGhlaWdodD0iNjA5LjA2MXB4IiB2aWV3Qm94PSIwIDAgNjA4Ljk3IDYwOS4wNjEiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDYwOC45NyA2MDkuMDYxIg0KCSB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwYXRoIGQ9Ik05Ni4yNSw1NTIuODc1aDE0MC41VjYxLjEyNUg5Ni4yNVY1NTIuODc1eiBNMzc3LjI1LDYxLjEyNXY0OTEuNzVoMTQwLjVWNjEuMTI1SDM3Ny4yNXoiLz4NCjwvc3ZnPg0K") no-repeat;
+  background-size: contain; }
+
 .player-controls {
-  width: 180px; }
+  width: 104px; }
   .player-controls .player-btn {
-    color: #D9D9D9;
-    background-color: #414141; }
+    color: #D9D9D9; }
 
 /*# sourceMappingURL=style.css.map */
