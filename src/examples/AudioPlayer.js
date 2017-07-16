@@ -53,7 +53,9 @@ class AudioPlayer extends Component {
 
     play = () => {
         this.setState({ play: true });
+        this.refs.player.volume = 0;
         this.refs.player.play();
+
     }
 
     pause = () => {
@@ -112,7 +114,6 @@ class AudioPlayer extends Component {
 
         const { active, play, progress } = this.state;
 
-        let coverClass = classnames('player-cover', {'no-height': !!!active.cover });
         let playPauseClass = classnames('fa', {'fa-pause': play}, {'fa-play': !play});
         let volumeClass = classnames('fa', {'fa-volume-up': !this.state.mute}, {'fa-volume-off': this.state.mute});
         let repeatClass = classnames('player-btn small repeat', {'active': this.state.repeat});
@@ -121,7 +122,8 @@ class AudioPlayer extends Component {
         return (
             <div className="player-container">
 
-                <span className="player-progress-container-wrapper" onClick={this.setProgress}>
+                {/*<span className="player-progress-container-wrapper" onClick={this.setProgress}>*/}
+                <span className="player-progress-container-wrapper">
                     <span className="player-progress-value" style={{height: progress + '%'}}></span>
                     <div className="player-progress-container"></div>
                 </span>

@@ -101,12 +101,20 @@ const examples = [
   //   url: 'Benchmark/RotatingCubesDirectUpdates',
   //   slug: 'benchmarks_rotating_cubes_direct'
   // },
+    {
+        name: 'Ruqia',
+        component: Ruqia,
+        url: 'Ruqia',
+        slug: 'ruqia',
+        media: 'data/01 Ruqia(Shorter_Immersive_Website_Version).mp3',
+        spotifyUrl: 'https://open.spotify.com/album/3ILBGXvUwP6kVni9wAFuCU'
+    },
   {
     name: 'Empire Sounds',
     component: EmpireSounds,
     url: 'EmpireSounds',
     slug: 'empire_sounds',
-    // media: 'data/02 Empire Sounds(Shorter_Immersive_Website_Version).mp3',
+    media: 'data/02 Empire Sounds(Shorter_Immersive_Website_Version).mp3',
     spotifyUrl: 'https://open.spotify.com/album/3ILBGXvUwP6kVni9wAFuCU'
   },
   {
@@ -114,7 +122,7 @@ const examples = [
     component: Biomes,
     url: 'biomes',
     slug: 'biomes',
-    // media: 'data/04 Biomes(Shorter_Immersive_Website_Version).mp3',
+    media: 'data/04 Biomes(Shorter_Immersive_Website_Version).mp3',
     spotifyUrl: 'https://open.spotify.com/album/3ILBGXvUwP6kVni9wAFuCU'
   }
 ];
@@ -122,7 +130,6 @@ const examples = [
 const songs = [
     {
         url: 'data/01 Ruqia(Shorter_Immersive_Website_Version).mp3',
-        cover: 'path/to/jpeg',
         component: Ruqia,
         slug: 'ruqia',
 
@@ -159,32 +166,6 @@ const TrackBrowser = ({ params }) => {
   return (
     <div>
       <AudioPlayer songs={songs}/>
-      {/*<div id="panel" className="collapsed">*/}
-        {/*<div id="content">*/}
-          {/*<div>*/}
-            {/*{examples.map((example, index) => {*/}
-              {/*if (example.separator) {*/}
-                {/*return (<h2 key={index}>{example.name}</h2>);*/}
-              {/*}*/}
-
-              {/*if (example.advanced) {*/}
-                {/*return (<div key={index}>*/}
-                  {/*<a href={example.page} target="blank">{example.name}</a> (new tab)*/}
-                {/*</div>);*/}
-              {/*}*/}
-
-              {/*return (<Link*/}
-                {/*to={`/${example.slug}`}*/}
-                {/*key={index}*/}
-                {/*className={"link track-" + index}*/}
-                {/*activeClassName="selected"*/}
-              {/*>*/}
-                {/*{example.name}*/}
-              {/*</Link>);*/}
-            {/*})}*/}
-          {/*</div>*/}
-        {/*</div>*/}
-      {/*</div>*/}
       <TrackViewer example={activeExample} />
     </div>
   );

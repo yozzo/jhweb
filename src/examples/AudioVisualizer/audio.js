@@ -108,7 +108,6 @@ class AudioAnalyzer extends React.Component {
                         analyser.connect(sourceJs);
                         source.connect(context.destination);
                         source.start(0); //play
-                        
                         sourceJs.onaudioprocess = function (e) {
                             array = new Uint8Array(analyser.frequencyBinCount);
                             analyser.getByteFrequencyData(array);
@@ -159,7 +158,6 @@ class AudioAnalyzer extends React.Component {
 
     render() {
         const ExampleComponent = this.props.children.props.videoInput;
-
         return(
             <div id="audioValue" data={this.state.boost}>
                 <ExampleComponent

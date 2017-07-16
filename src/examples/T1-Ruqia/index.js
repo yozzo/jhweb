@@ -2,6 +2,7 @@ import React from 'react';
 import * as THREE from 'three';
 import PIXI from '../../ref/pixi.js';
 import dat from '../../ref/dat.gui.min.js';
+// import AnimationFilter from '../AnimationFilter/index'
 
 
 class Ruqia extends React.Component {
@@ -9,7 +10,6 @@ class Ruqia extends React.Component {
         width: React.PropTypes.number.isRequired,
         height: React.PropTypes.number.isRequired
     };
-
 
     constructor(props, context) {
         super(props, context);
@@ -43,6 +43,9 @@ class Ruqia extends React.Component {
         };
 
         this.playShaderAnimation();
+    }
+
+    componentDidMount = () => {
     }
 
     playShaderAnimation() {
@@ -304,14 +307,16 @@ class Ruqia extends React.Component {
             audioData
         } = this.props;
 
+        console.log('motan');
+
+
 
         // or you can use:
         // width = window.innerWidth
         // height = window.innerHeight
 
         return(
-            <div id="biomes">
-            </div>
+           <AnimationFilter/>
         );
     }
 }

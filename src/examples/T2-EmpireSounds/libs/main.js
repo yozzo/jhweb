@@ -23,6 +23,7 @@ import '../libs/SuperShader.js';
 
 import React from 'react';
 
+
 let context,
     source,
     sourceJs,
@@ -153,7 +154,7 @@ class Ribbons extends React.Component {
             //     console.log('>>>>>boost', boost);
             // });
 
-            console.log('is it?', $('#ribbons').length);
+            // console.log('is it?', $('#ribbons').length);
             $('#ribbons').append( renderer.domElement );
             $('#ribbons').css('background', 'url(data/006.jpg)');
             // $('#empire-sounds').append( stats.domElement  );

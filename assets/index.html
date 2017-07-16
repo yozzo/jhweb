@@ -1,28 +1,729 @@
 <!doctype html>
 <html>
+<title>James Heather | Stories From Far Away On Piano</title>
 <head>
     <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
-<div id="content"></div>
+<div id="content"> </div>
 </body>
+<script id="baseVs" type="x-shader/x-vertex">
+attribute vec3 pos;
+attribute vec4 color;
+attribute vec2 texcoord;
+
+varying vec2 v_texCoord;
+varying vec4 vColor;
+
+void main() {
+   gl_Position = vec4((pos.x),pos.y,pos.z,1.0);
+   v_texCoord = texcoord;
+   vColor = color;
+}
+</script>
+<script id="translateVs" type="x-shader/x-vertex">
+attribute vec3 pos;
+attribute vec4 color;
+attribute vec2 texcoord;
+
+varying vec2 v_texCoord;
+varying vec4 vColor;
+
+uniform float u_mouseX;
+uniform float u_mouseY;
+
+vec2 scale = vec2(u_mouseX, u_mouseY);
+void main() {
+
+   gl_Position = vec4(pos.x*scale.x,pos.y*scale.y,pos.z,1.0);
+   v_texCoord = texcoord;
+   vColor = color;
+
+}
+</script>
+<script id="baseFs" type="x-shader/x-fragment">
+precision mediump float;
+uniform sampler2D u_image;
+varying vec2 v_texCoord;
+
+void main() {
+  vec4 color = texture2D(u_image, v_texCoord);
+  gl_FragColor = vec4(color.r,color.g,color.b,1.0);
+}
+</script>
+<script id="blurFrag" type="x-shader/x-fragment">
+precision mediump float;
+uniform sampler2D u_image;
+uniform float step_w;
+uniform float step_h;
+
+varying vec2 v_texCoord;
+
+void main() {
+
+  vec2 tc = v_texCoord;
+  vec4 input0 = texture2D(u_image,tc);
+
+  vec2 x1 = vec2(step_w, 0.0);
+  vec2 y1 = vec2(0.0, step_h);
+
+  input0 += texture2D(u_image, tc+x1); // right
+  input0 += texture2D(u_image, tc-x1); // left
+  input0 += texture2D(u_image, tc+y1); // top
+  input0 += texture2D(u_image, tc-y1); // bottom
+
+  input0 *=0.2;
+
+  gl_FragColor = input0;
+}
+</script>
+<script id="contrastFrag" type="x-shader/x-fragment">
+precision highp float;
+uniform sampler2D u_image;
+varying vec2 v_texCoord;
+
+//float contrast = 2.0;
+
+void main() {
+    vec4 color = texture2D(u_image, vec2((v_texCoord.x*-1.0)+1.0, v_texCoord.y)); //horizontal flip
+    //const vec3 LumCoeff = vec3(0.2125, 0.7154, 0.0721);
+
+   //vec3 AvgLumin = vec3(0.5, 0.5, 0.5);
+
+    //vec3 intensity = vec3(dot(color.rgb, LumCoeff));
+
+    //vec3 satColor = mix(intensity, color.rgb, 1.);
+    //vec3 conColor = mix(AvgLumin, satColor, contrast);
+
+    gl_FragColor = vec4(vec3(color.rgb),1.0);
+}
+</script>
+<script id="flowFrag" type="x-shader/x-fragment">
+precision mediump float;
+
+varying vec2 v_texCoord;
+uniform sampler2D u_image;
+uniform sampler2D u_image2;
+uniform vec2 scale;
+uniform vec2 offset;
+uniform float lambda;
+const vec4 lumcoeff = vec4(0.299,0.587,0.114,0.);
+
+void main()
+{
+  vec4 a = texture2D(u_image, v_texCoord);
+  vec4 b = texture2D(u_image2, v_texCoord);
+  vec2 x1 = vec2(offset.x,0.);
+  vec2 y1 = vec2(0.,offset.y);
+
+  vec4 curdif = b-a;
+
+  vec4 gradx = texture2D(u_image2, v_texCoord+x1)-texture2D(u_image2, v_texCoord-x1);
+  gradx += texture2D(u_image, v_texCoord+x1)-texture2D(u_image, v_texCoord-x1);
+
+  vec4 grady = texture2D(u_image2, v_texCoord+y1)-texture2D(u_image2, v_texCoord-y1);
+  grady += texture2D(u_image, v_texCoord+y1)-texture2D(u_image, v_texCoord-y1);
+
+  vec4 gradmag = sqrt((gradx*gradx)+(grady*grady)+vec4(lambda));
+
+  vec4 vx = curdif*(gradx/gradmag);
+  float vxd = vx.r;
+  vec2 xout = vec2(max(vxd,0.),abs(min(vxd,0.)))*scale.x;
+
+  vec4 vy = curdif*(grady/gradmag);
+  float vyd = vy.r;
+  vec2 yout = vec2(max(vyd,0.),abs(min(vyd,0.)))*scale.y;
+
+  gl_FragColor = vec4(xout.yy,xout.yy);
+
+}
+
+</script>
+<script id="reposFrag" type="x-shader/x-fragment">
+precision mediump float;
+varying vec2 v_texCoord;
+
+uniform vec2 amt;
+uniform sampler2D u_image;
+uniform sampler2D u_image2;
+
+
+void main(){
+
+    vec2 tc = v_texCoord;
+    vec4 look = texture2D(u_image2,tc);//sample repos texture
+    vec2 offs = vec2(look.y-look.x,look.w-look.z)*amt;
+    vec2 coord = offs+tc;  //relative coordinates
+
+    vec4 repos = texture2D(u_image, coord);
+
+    gl_FragColor = repos;
+}
+</script>
+<script id="blackFrag" type="x-shader/x-fragment">
+precision mediump float;
+
+void main() {
+  gl_FragColor = vec4(0.0,0.0,0.0,0.0);
+}
+</script>
+
 <script type="text/javascript" charset="utf-8" src="js/bundle-commons.js"></script>
 <script type="text/javascript" charset="utf-8" src="js/bundle-app.js"></script>
-<script type="text/javascript">
-    var sc_project = 10775601;
-    var sc_invisible = 1;
-    var sc_security = "74e09d45";
-    var sc_https = 1;
-    var sc_remove_link = 1;
-    var scJsHost = (("https:" == document.location.protocol) ?
-            "https://secure." : "http://www.");
-    document.write("<sc" + "ript type='text/javascript' src='" +
-            scJsHost +
-            "statcounter.com/counter/counter.js'></" + "script>");
+
+<script type="text/javascript" charset="utf-8">
+    var gl;
+
+    function resizeCanvas(){
+        var width = gl.canvas.width;
+        var height = gl.canvas.height;
+        if(canvas.width != width ||
+            canvas.height != height){
+            canvas.width = width;
+            canvas.height = height;
+        }
+    }
+
+    function createAndSetupTexture(gl){
+        var texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+        return texture;
+    }
+
+    function pxFbo(){
+        this.start = function(pgm){
+            gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo);
+        };
+
+        this.allocate = function(w, h, mode){
+
+            //mode = true;
+
+            this.fbo = gl.createFramebuffer();
+            this.texture = gl.createTexture();
+            gl.bindTexture(gl.TEXTURE_2D, this.texture);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+            if(mode == true){
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            }
+            else if(mode == false){
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+            }
+
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo);
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.texture, 0);
+        };
+
+        this.draw = function(pgm){
+            this.bb.draw(pgm, this.texture);
+        }
+
+        this.draw2 = function(pgm, texture2){
+            this.bb.draw2(pgm, this.texture, texture2);
+        }
+
+        this.draw3 = function(pgm, texture2, texture3){
+            this.bb.draw3(pgm, this.texture, texture2, texture3);
+        }
+
+        this.drawLoop = function(pgm, textures, numTextures){
+            this.bb.drawLoop(pgm, this.texture, numTextures);
+        }
+
+        this.fbo;
+        this.texture;
+        this.bb = new pxBB(gl);
+    }
+
+    function initBuffer(buf,dataset){
+        gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(dataset), gl.STATIC_DRAW);
+    }
+
+    function pxBB(){
+        this.vert = gl.createBuffer();
+        initBuffer(this.vert, [
+            -1.0,1.0,
+            0.0,-1.0,
+            -1.0,0.0,
+            1.0,1.0,
+            0.0,1.0,
+            -1.0,0.0
+        ]);
+
+        this.tex = gl.createBuffer();
+        initBuffer(this.tex,[
+            0,1,
+            0,0,
+            1,1,
+            1,0
+        ]);
+
+        this.color = gl.createBuffer();
+        initBuffer(this.color, [
+            1,1,1,1,
+            1,1,1,1,
+            1,1,1,1,
+            1,1,1,1
+        ]);
+
+        pxBB.prototype.predraw = function(pgm){
+            //set up vertex attributes
+            gl.useProgram(pgm);
+            pgm.vertexPosAttrib = gl.getAttribLocation(pgm, 'pos');
+            gl.enableVertexAttribArray(pgm.vertexPosAttrib);
+
+            pgm.vertexColorAttrib = gl.getAttribLocation(pgm, 'color');
+            gl.enableVertexAttribArray(pgm.vertexColorAttrib);
+
+            pgm.vertexTexAttrib = gl.getAttribLocation(pgm, 'texcoord');
+            gl.enableVertexAttribArray(pgm.vertexTexAttrib);
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.color);
+            gl.vertexAttribPointer(pgm.vertexColorAttrib, 4, gl.FLOAT, false, 0,0);
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.vert);
+            gl.vertexAttribPointer(pgm.vertexPosAttrib, 3, gl.FLOAT, false, 0,0);
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.tex);
+            gl.vertexAttribPointer(pgm.vertexTexAttrib, 2, gl.FLOAT, false, 0,0);
+
+        }
+
+        pxBB.prototype.draw = function(pgm, texture){
+            this.predraw(pgm);
+            gl.uniform1i(gl.getUniformLocation(pgm,"u_image"), 0);
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        }
+
+        pxBB.prototype.draw2 = function(pgm, texture1, texture2){
+            this.predraw(pgm);
+            gl.uniform1i(gl.getUniformLocation(pgm,"u_image"), 0);
+            gl.uniform1i(gl.getUniformLocation(pgm,"u_image2"), 1);
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, texture1);
+            gl.activeTexture(gl.TEXTURE1);
+            gl.bindTexture(gl.TEXTURE_2D, texture2);
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+        }
+
+        pxBB.prototype.draw3 = function(pgm, texture1, texture2, texture3){
+            this.predraw(pgm);
+            gl.uniform1i(gl.getUniformLocation(pgm,"u_image"), 0);
+            gl.uniform1i(gl.getUniformLocation(pgm,"u_image2"), 1);
+            gl.uniform1i(gl.getUniformLocation(pgm,"u_image3"), 2);
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, texture1);
+            gl.activeTexture(gl.TEXTURE1);
+            gl.bindTexture(gl.TEXTURE_2D, texture2);
+            gl.activeTexture(gl.TEXTURE2);
+            gl.bindTexture(gl.TEXTURE_2D, texture3);
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+        }
+
+        pxBB.prototype.drawLoop = function(pgm, textures, numTextures){
+            this.predraw(pgm);
+            for(var i = 0; i<numTextures; i++){
+                gl.uniform1i(gl.getUniformLocation(pgm, "u_image"), i);
+                gl.activeTexture(gl.TEXTURE0 + i);
+                gl.bindTexture(gl.TEXTURE_2D, textures[i]);
+
+            }
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0 , 4);
+        }
+
+    }
+
+    (function() {
+
+        /**
+         * Wrapped logging function.
+         * @param {string} msg The message to log.
+         */
+        var log = function(msg) {
+            if (window.console && window.console.log) {
+                window.console.log(msg);
+            }
+        };
+
+        /**
+         * Wrapped logging function.
+         * @param {string} msg The message to log.
+         */
+        var error = function(msg) {
+            if (window.console) {
+                if (window.console.error) {
+                    window.console.error(msg);
+                }
+                else if (window.console.log) {
+                    window.console.log(msg);
+                }
+            }
+        };
+
+        /**
+         * Turn off all logging.
+         */
+        var loggingOff = function() {
+            log = function() {};
+            error = function() {};
+        };
+
+        /**
+         * Check if the page is embedded.
+         * @return {boolean} True of we are in an iframe
+         */
+        var isInIFrame = function() {
+            return window != window.top;
+        };
+
+        /**
+         * Converts a WebGL enum to a string
+         * @param {!WebGLContext} gl The WebGLContext to use.
+         * @param {number} value The enum value.
+         * @return {string} The enum as a string.
+         */
+        var glEnumToString = function(gl, value) {
+            for (var p in gl) {
+                if (gl[p] == value) {
+                    return p;
+                }
+            }
+            return "0x" + value.toString(16);
+        };
+
+        /**
+         * Creates the HTLM for a failure message
+         * @param {string} canvasContainerId id of container of th
+         *        canvas.
+         * @return {string} The html.
+         */
+        var makeFailHTML = function(msg) {
+            return '' +
+                '<table style="background-color: #8CE; width: 100%; height: 100%;"><tr>' +
+                '<td align="center">' +
+                '<div style="display: table-cell; vertical-align: middle;">' +
+                '<div style="">' + msg + '</div>' +
+                '</div>' +
+                '</td></tr></table>';
+        };
+
+        /**
+         * Mesasge for getting a webgl browser
+         * @type {string}
+         */
+        var GET_A_WEBGL_BROWSER = '' +
+            'This page requires a browser that supports WebGL.<br/>' +
+            '<a href="http://get.webgl.org">Click here to upgrade your browser.</a>';
+
+        /**
+         * Mesasge for need better hardware
+         * @type {string}
+         */
+        var OTHER_PROBLEM = '' +
+            "It doesn't appear your computer can support WebGL.<br/>" +
+            '<a href="http://get.webgl.org/troubleshooting/">Click here for more information.</a>';
+
+        /**
+         * Creates a webgl context. If creation fails it will
+         * change the contents of the container of the <canvas>
+         * tag to an error message with the correct links for WebGL.
+         * @param {Element} canvas. The canvas element to create a
+         *     context from.
+         * @param {WebGLContextCreationAttirbutes} opt_attribs Any
+         *     creation attributes you want to pass in.
+         * @return {WebGLRenderingContext} The created context.
+         */
+        var setupWebGL = function(canvas, opt_attribs) {
+            function showLink(str) {
+                var container = canvas.parentNode;
+                if (container) {
+                    container.innerHTML = makeFailHTML(str);
+                }
+            };
+
+            if (!window.WebGLRenderingContext) {
+                showLink(GET_A_WEBGL_BROWSER);
+                return null;
+            }
+
+            var context = create3DContext(canvas, opt_attribs);
+            if (!context) {
+                showLink(OTHER_PROBLEM);
+            }
+            return context;
+        };
+
+        /**
+         * Creates a webgl context.
+         * @param {!Canvas} canvas The canvas tag to get context
+         *     from. If one is not passed in one will be created.
+         * @return {!WebGLContext} The created context.
+         */
+        var create3DContext = function(canvas, opt_attribs) {
+            var names = ["webgl", "experimental-webgl"];
+            var context = null;
+            for (var ii = 0; ii < names.length; ++ii) {
+                try {
+                    context = canvas.getContext(names[ii], opt_attribs);
+                } catch(e) {}
+                if (context) {
+                    break;
+                }
+            }
+            return context;
+        }
+
+        var updateCSSIfInIFrame = function() {
+            if (isInIFrame()) {
+                document.body.className = "iframe";
+            }
+        };
+
+        /**
+         * Gets a WebGL context.
+         * makes its backing store the size it is displayed.
+         */
+        var getWebGLContext = function(canvas, opt_attribs) {
+            if (isInIFrame()) {
+                updateCSSIfInIFrame();
+
+                // make the canvas backing store the size it's displayed.
+                canvas.width = canvas.clientWidth;
+                canvas.height = canvas.clientHeight;
+            } else {
+                var title = document.title;
+//                var h1 = document.createElement("h1");
+//                h1.innerText = title;
+//                document.body.insertBefore(h1, document.body.children[0]);
+            }
+
+            gl = setupWebGL(canvas, opt_attribs);
+            return gl;
+        };
+
+        /**
+         * Loads a shader.
+         * @param {!WebGLContext} gl The WebGLContext to use.
+         * @param {string} shaderSource The shader source.
+         * @param {number} shaderType The type of shader.
+         * @param {function(string): void) opt_errorCallback callback for errors.
+         * @return {!WebGLShader} The created shader.
+         */
+        var loadShader = function(gl, shaderSource, shaderType, opt_errorCallback) {
+            var errFn = opt_errorCallback || error;
+            // Create the shader object
+            var shader = gl.createShader(shaderType);
+
+            // Load the shader source
+            gl.shaderSource(shader, shaderSource);
+
+            // Compile the shader
+            gl.compileShader(shader);
+
+            // Check the compile status
+            var compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+            if (!compiled) {
+                // Something went wrong during compilation; get the error
+                lastError = gl.getShaderInfoLog(shader);
+                errFn("*** Error compiling shader '" + shader + "':" + lastError);
+                gl.deleteShader(shader);
+                return null;
+            }
+
+            return shader;
+        }
+
+        /**
+         * Creates a program, attaches shaders, binds attrib locations, links the
+         * program and calls useProgram.
+         * @param {!Array.<!WebGLShader>} shaders The shaders to attach
+         * @param {!Array.<string>} opt_attribs The attribs names.
+         * @param {!Array.<number>} opt_locations The locations for the attribs.
+         * @param {function(string): void) opt_errorCallback callback for errors.
+ */
+        var loadProgram = function(
+            gl, shaders, opt_attribs, opt_locations, opt_errorCallback) {
+            var errFn = opt_errorCallback || error;
+            var program = gl.createProgram();
+            for (var ii = 0; ii < shaders.length; ++ii) {
+                gl.attachShader(program, shaders[ii]);
+            }
+            if (opt_attribs) {
+                for (var ii = 0; ii < opt_attribs.length; ++ii) {
+                    gl.bindAttribLocation(
+                        program,
+                        opt_locations ? opt_locations[ii] : ii,
+                        opt_attribs[ii]);
+                }
+            }
+            gl.linkProgram(program);
+
+            // Check the link status
+            var linked = gl.getProgramParameter(program, gl.LINK_STATUS);
+            if (!linked) {
+                // something went wrong with the link
+                lastError = gl.getProgramInfoLog (program);
+                errFn("Error in program linking:" + lastError);
+
+                gl.deleteProgram(program);
+                return null;
+            }
+            return program;
+        };
+
+        /**
+         * Loads a shader from a script tag.
+         * @param {!WebGLContext} gl The WebGLContext to use.
+         * @param {string} scriptId The id of the script tag.
+         * @param {number} opt_shaderType The type of shader. If not passed in it will
+         *     be derived from the type of the script tag.
+         * @param {function(string): void) opt_errorCallback callback for errors.
+         * @return {!WebGLShader} The created shader.
+         */
+        var createShaderFromScript = function(
+            gl, scriptId, opt_shaderType, opt_errorCallback) {
+            var shaderSource = "";
+            var shaderType;
+            var shaderScript = document.getElementById(scriptId);
+            if (!shaderScript) {
+                throw("*** Error: unknown script element" + scriptId);
+            }
+            shaderSource = shaderScript.text;
+
+            if (!opt_shaderType) {
+                if (shaderScript.type == "x-shader/x-vertex") {
+                    shaderType = gl.VERTEX_SHADER;
+                } else if (shaderScript.type == "x-shader/x-fragment") {
+                    shaderType = gl.FRAGMENT_SHADER;
+                } else if (shaderType != gl.VERTEX_SHADER && shaderType != gl.FRAGMENT_SHADER) {
+                    throw("*** Error: unknown shader type");
+                    return null;
+                }
+            }
+
+            return loadShader(
+                gl, shaderSource, opt_shaderType ? opt_shaderType : shaderType,
+                opt_errorCallback);
+        };
+
+        var defaultShaderType = [
+            "VERTEX_SHADER",
+            "FRAGMENT_SHADER"
+        ];
+
+        /**
+         * Creates a program from 2 script tags.
+         *
+         * @param {!WebGLContext} gl The WebGLContext to use.
+         * @param {!Array.<string>} shaderScriptIds Array of ids of the
+         *        script tags for the shaders. The first is assumed to
+         *        be the vertex shader, the second the fragment shader.
+         * @param {!Array.<string>} opt_attribs The attribs names.
+         * @param {!Array.<number>} opt_locations The locations for the attribs.
+         * @param {function(string): void) opt_errorCallback callback for errors.
+         * @return {!WebGLProgram} The created program.
+         */
+        var createProgramFromScripts = function(
+            gl, shaderScriptIds, opt_attribs, opt_locations, opt_errorCallback) {
+            var shaders = [];
+            for (var ii = 0; ii < shaderScriptIds.length; ++ii) {
+                shaders.push(createShaderFromScript(
+                    gl, shaderScriptIds[ii], gl[defaultShaderType[ii]], opt_errorCallback));
+            }
+            return loadProgram(gl, shaders, opt_attribs, opt_locations, opt_errorCallback);
+        };
+
+
+// Add your prefix here.
+        var browserPrefixes = [
+            "",
+            "MOZ_",
+            "OP_",
+            "WEBKIT_"
+        ];
+
+        /**
+         * Given an extension name like WEBGL_compressed_texture_s3tc
+         * returns the supported version extension, like
+         * WEBKIT_WEBGL_compressed_teture_s3tc
+         * @param {string} name Name of extension to look for
+         * @return {WebGLExtension} The extension or undefined if not
+         *     found.
+         */
+        var getExtensionWithKnownPrefixes = function(gl, name) {
+            for (var ii = 0; ii < browserPrefixes.length; ++ii) {
+                var prefixedName = browserPrefixes[ii] + name;
+                var ext = gl.getExtension(prefixedName);
+                if (ext) {
+                    return ext;
+                }
+            }
+        };
+
+
+        /**
+         * Resize a canvas to match the size it's displayed.
+         * @param {!Canvas} canvas The canvas to resize.
+         */
+        var resizeCanvasToDisplaySize = function(canvas) {
+            if (canvas.width != canvas.clientWidth ||
+                canvas.height != canvas.clientHeight) {
+                canvas.width = canvas.clientWidth;
+                canvas.height = canvas.clientHeight;
+            }
+        }
+
+//        debugger;
+        /* export functions */
+        this.createProgram = loadProgram;
+        this.createProgramFromScripts = createProgramFromScripts;
+        this.createShaderFromScriptElement = createShaderFromScript;
+        this.getWebGLContext = getWebGLContext;
+        this.updateCSSIfInIFrame = updateCSSIfInIFrame;
+        this.getExtensionWithKnownPrefixes = getExtensionWithKnownPrefixes;
+        this.resizeCanvasToDisplaySize = resizeCanvasToDisplaySize;
+
+        /**
+         * Provides requestAnimationFrame in a cross browser way.
+         */
+        this.requestAnimFrame = (function() {
+            return window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                window.oRequestAnimationFrame ||
+                window.msRequestAnimationFrame ||
+                function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
+                    return window.setTimeout(callback, 1000/60);
+                };
+        })();
+
+        /**
+         * Provides cancelRequestAnimationFrame in a cross browser way.
+         */
+        this.cancelRequestAnimFrame = (function() {
+            return window.cancelCancelRequestAnimationFrame ||
+                window.webkitCancelRequestAnimationFrame ||
+                window.mozCancelRequestAnimationFrame ||
+                window.oCancelRequestAnimationFrame ||
+                window.msCancelRequestAnimationFrame ||
+                window.clearTimeout;
+        })();
+
+    })()
 </script>
-<noscript>
-    <div class="statcounter"><img class="statcounter"
-                                  src="http://c.statcounter.com/10775601/0/74e09d45/1/"
-                                  alt="stats"></div>
-</noscript>
 </html>

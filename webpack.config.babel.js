@@ -64,6 +64,10 @@ export default {
         include: /react-three-renderer[\\\/]src/,
         ...babelLoaderConfigShared,
       },
+      {
+          test: /\.glsl$/,
+          loader: 'webpack-glsl'
+      }
     ],
   },
   resolve: {
