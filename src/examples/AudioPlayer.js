@@ -1,25 +1,33 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
+import { hashHistory } from 'react-router';
 import classnames from 'classnames';
 import shuffle from 'shuffle-array';
 
 class AudioPlayer extends Component {
     state = {
-        active: this.props.songs[0],
+        active: this.props.activeTrack,
         current: 0,
+        next: 1,
+        prev: this.props.songs.length - 1,
         progress: 0,
         random: false,
         repeat: false,
         mute: false,
-        play: this.props.autoplay || false,
+        play: this.props.autoplay || true,
         songs: this.props.songs
     }
 
     componentDidMount = () => {
-        let playerElement = this.refs.player;
+        let playerElement = this.refs.player,
+            current = this.getCurrentTrackIndex();
+
         playerElement.addEventListener('timeupdate', this.updateProgress);
-        playerElement.addEventListener('ended', this.end);
+        playerElement.addEventListener('ended', this.triggerNext);
         playerElement.addEventListener('error', this.next);
+        this.getCurrentTrackIndex();
+        this.setNextTrackIndex(current);
+        this.setPreviousTrackIndex(current);
     }
 
     componentWillUnmount = () => {
@@ -52,10 +60,46 @@ class AudioPlayer extends Component {
     }
 
     play = () => {
-        this.setState({ play: true });
-        this.refs.player.volume = 0;
-        this.refs.player.play();
 
+        // debugger;
+        let player = this.refs.player;
+        this.setState({ play: true });
+
+        // this.refs.player.volume = 0;
+        // this.getActiveTrack();
+// debugger;
+//         hashHistory.push('/' + active.slug);
+
+
+        setTimeout(() => {
+            player.play();
+        }, 150);
+    }
+
+    getActiveTrack = () => {
+        let activeTrack = this.props.activeTrack ? this.props.activeTrack.slug : this.state.songs[0].slug,
+            songs = this.state.songs,
+            item;
+
+        songs.map((item, index) => {
+            if (item.slug === activeTrack) {
+                this.setState({ current: index, active: songs[index], progress: 0 });
+            }
+        });
+    }
+
+    getCurrentTrackIndex = () => {
+        let songs = this.state.songs,
+            trackIndex;
+
+        songs.map((item, index) => {
+            if (item.slug === this.state.active.slug) {
+                this.setState({ current: index, active: songs[index], progress: 0 });
+                trackIndex = index;
+            }
+        });
+
+        return trackIndex;
     }
 
     pause = () => {
@@ -72,10 +116,11 @@ class AudioPlayer extends Component {
     }
 
     next = () => {
-        var total = this.state.songs.length;
-        var current = (this.state.repeat) ? this.state.current : (this.state.current < total - 1) ? this.state.current + 1 : 0;
-        var active = this.state.songs[current];
-
+        const total = this.state.songs.length;
+        const current = (this.state.repeat) ? this.state.current : (this.state.current < total - 1) ? this.state.current + 1 : 0;
+        const active = this.state.songs[current];
+        this.setNextTrackIndex(current);
+        this.setPreviousTrackIndex(current);
         this.setState({ current: current, active: active, progress: 0 });
 
         this.refs.player.src = active.url;
@@ -83,10 +128,12 @@ class AudioPlayer extends Component {
     }
 
     previous = () => {
-        var total = this.state.songs.length;
-        var current = (this.state.current > 0) ? this.state.current - 1 : total - 1;
-        var active = this.state.songs[current];
+        const total = this.state.songs.length;
+        const current = (this.state.current > 0) ? this.state.current - 1 : total - 1;
+        const active = this.state.songs[current];
 
+        this.setNextTrackIndex(current);
+        this.setPreviousTrackIndex(current);
         this.setState({ current: current, active: active, progress: 0 });
 
         this.refs.player.src = active.url;
@@ -103,6 +150,45 @@ class AudioPlayer extends Component {
         this.setState({ repeat: !this.state.repeat });
     }
 
+    setNextTrackIndex = (current) => {
+        const total = this.state.songs.length;
+        let next;
+
+        // debugger
+        if (this.state.next >= total - 1 || current === total - 1) {
+            next = 0
+        }
+        else if (this.state.next === 1 && current !== 0) {
+            next = this.state.next + 1;
+        }
+        else {
+            next = current + 1;
+        }
+
+        if (next === 4) {
+            debugger;
+        }
+
+        this.setState({next: next});
+
+        return this;
+    }
+
+    setPreviousTrackIndex = (current) => {
+        const total = this.state.songs.length;
+        let prev;
+
+        if (this.state.prev >= total - 1) {
+            prev = total - 1;
+        } else {
+            prev = current -1;
+        }
+
+        this.setState({prev: prev});
+
+        return this;
+    }
+
     toggleMute = () => {
         let mute = this.state.mute;
 
@@ -110,9 +196,14 @@ class AudioPlayer extends Component {
         this.refs.player.volume = (mute) ? 1 : 0;
     }
 
+    triggerNext = () => {
+        document.location.hash = this.nextButton.props.to;
+        this.next();
+    }
+
     render () {
 
-        const { active, play, progress } = this.state;
+        const { active, play, progress, next, prev, songs } = this.state;
 
         let playPauseClass = classnames('fa', {'fa-pause': play}, {'fa-play': !play});
         let volumeClass = classnames('fa', {'fa-volume-up': !this.state.mute}, {'fa-volume-off': this.state.mute});
@@ -120,8 +211,18 @@ class AudioPlayer extends Component {
         let randomClass = classnames('player-btn small random', {'active': this.state.random });
 
         return (
-            <div className="player-container">
+            <div>
+                <h1 className="heading-name">JAMES<br/>
+                    HEATHER</h1>
 
+                <h2 className="heading-album">Stories<br/>
+                    from<br/>
+                    far<br/>
+                    away<br/>
+                    on<br/>
+                    piano</h2>
+
+            <div className="player-container">
                 {/*<span className="player-progress-container-wrapper" onClick={this.setProgress}>*/}
                 <span className="player-progress-container-wrapper">
                     <span className="player-progress-value" style={{height: progress + '%'}}></span>
@@ -140,7 +241,7 @@ class AudioPlayer extends Component {
 
                 <div className="player-options">
                     <div className="player-buttons player-controls">
-                        <Link to={`/${active.slug}`} onClick={this.previous} className="player-btn medium" title="Previous Song">
+                        <Link to={`/${songs[prev].slug}`} onClick={this.previous} className="player-btn medium hide" title="Previous Song">
                             <i className="fa fa-backward" />
                         </Link>
 
@@ -148,7 +249,7 @@ class AudioPlayer extends Component {
                             <i className={playPauseClass} />
                         </button>
 
-                        <Link to={`/${active.slug}`} onClick={this.next} className="player-btn medium" title="Next Song">
+                        <Link to={`/${songs[next].slug}`} onClick={this.next} ref={button => this.nextButton = button}  className="player-btn medium" title="Next Song">
                             <i className="fa fa-forward" />
                         </Link>
                     </div>
@@ -169,6 +270,8 @@ class AudioPlayer extends Component {
 
                 </div>
             </div>
+            </div>
+
         );
     }
 }

@@ -10,7 +10,7 @@ const pluginsWithoutUglify = [
     },
   }),
   new webpack.optimize.CommonsChunkPlugin(
-    path.join('js', 'bundle-commons.js'), ['app', 'advanced']),
+    path.join('js', 'bundle-commons.js'), ['lib', 'app', 'advanced']),
 ];
 
 const plugins = pluginsWithoutUglify.concat([
@@ -34,7 +34,7 @@ const babelLoaderConfigShared = {
 export default {
   entry: {
     app: [
-      './src/index.js',
+      './src/index.js'
     ],
     advanced: [
       './src/examples/AdvancedExample/index.js',

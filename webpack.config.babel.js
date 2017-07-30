@@ -11,7 +11,7 @@ const pluginsWithoutUglify = [
     },
   }),
   new webpack.optimize.CommonsChunkPlugin(
-    path.join('js', 'bundle-commons.js'), ['app', 'advanced']),
+    path.join('js', 'bundle-commons.js'), ['lib', 'app', 'advanced']),
   new StaticSiteGeneratorPlugin({
       crawl: true
     })

@@ -2,7 +2,7 @@ import React from 'react';
 // import React3 from 'react-three-renderer';
 // import * as THREE from 'three';
 import Ribbons from './libs/main.js';
-import AnimationFilter from '../AnimationFilter/index';
+
 
 class EmpireSounds extends React.Component {
     static propTypes = {
@@ -21,7 +21,7 @@ class EmpireSounds extends React.Component {
     render() {
         return (
             <div>
-                <AnimationFilter audioData={this.props.audioData}/>
+                {/*<AnimationFilter audioData={this.props.audioData}/>*/}
                 {/*<Ribbons audioData={this.props.audioData}/>*/}
             </div>
         );

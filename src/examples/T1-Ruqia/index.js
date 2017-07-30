@@ -59,7 +59,7 @@ class Ruqia extends React.Component {
 
         // add render view to DOM
         setTimeout(function(){
-            document.getElementById('biomes').appendChild(renderer.view);
+            document.getElementsByTagName('body')[0].appendChild(renderer.view);
         }, 300);
 
         if ($('.dg').length) {
@@ -307,16 +307,12 @@ class Ruqia extends React.Component {
             audioData
         } = this.props;
 
-        console.log('motan');
-
-
-
         // or you can use:
         // width = window.innerWidth
         // height = window.innerHeight
 
         return(
-           <AnimationFilter/>
+            <div style={{display: 'block', margin: '50vh auto', width:'100%', ['text-align']:'center' }}>Encoding audio signal to data...</div>
         );
     }
 }

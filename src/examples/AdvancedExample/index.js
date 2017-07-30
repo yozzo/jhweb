@@ -17,6 +17,8 @@ const cameraPosition = new THREE.Vector3(0, 0, 5);
 
 let cubeRotation = new THREE.Euler();
 
+console.log('webpack is the sheet');
+
 function onRecreateCanvas() {
   // no need to deal with this now, but here we'd need to create a new canvas and
   // re-render the scene there.

@@ -7,6 +7,7 @@ const ExampleViewer = ({ example, size }) => {
   let exampleContent = null;
   let media = '';
 
+
   if (example) {
 
     if (example.media) {
@@ -20,7 +21,7 @@ const ExampleViewer = ({ example, size }) => {
 
     exampleContent = (
       <div>
-        <AudioAnalyser audioUrl={media}>
+        <AudioAnalyser audioUrl={example.url}>
           <ExampleComponent
               width={size.width}
               height={size.height}

@@ -1,8 +1,18 @@
 import React from 'react';
-import './lib.js';
+
+import baseVsFile from 'raw!./shaders/baseVs.vert';
+import translateVsFile from 'raw!./shaders/translateVs.vert';
+import baseFsFile from 'raw!./shaders/baseFs.frag';
+import blurFile from 'raw!./shaders/blur.frag';
+import contrastFragFile from 'raw!./shaders/contrast.frag';
+import flowFragFile from 'raw!./shaders/flow.frag';
+import reposFragFile from 'raw!./shaders/repos.frag';
+import blackFragFile from 'raw!./shaders/black.frag';
+
+import PIXI from '../../ref/pixi.js';
+import dat from '../../ref/dat.gui.min.js';
 
 class AnimationFilter extends React.Component {
-
     constructor(props) {
         super(props);
 
@@ -18,11 +28,14 @@ class AnimationFilter extends React.Component {
 
     componentDidMount() {
         // debugger;
-        this.initFilter();
+
+
+        this.playShaderAnimation();
+        this.initFilter(this.state, this.props);
     }
 
     componentDidUpdate() {
-
+        console.log('=========== component did update ===============');
     }
 
     /**
@@ -30,8 +43,7 @@ class AnimationFilter extends React.Component {
      * //TODO: ES6
      * @param audioUrl
      */
-    initFilter() {
-
+    initFilter(state, props) {
         var gl, cBB, canvas;
         var baseProgram, contrastProgram, blurProgram, flowProgram, reposProgram, blackProgram;
         var feedback, contrastFbo, blurFbo, flowFbo, reposFbo, lastFrameFbo, blackFbo;
@@ -43,6 +55,12 @@ class AnimationFilter extends React.Component {
         var videoLoaded = false;
         var interpMode = false;
         var video=document.createElement('video');
+        var fish=document.createElement('img');
+        let audioData,
+            internalClock = 0,
+            firstTimer = null,
+            nextTimer = null,
+            audioOutput = [10, 8];
 
         canvas = document.getElementById("canvas");
         canvas.width = window.innerWidth;
@@ -51,6 +69,8 @@ class AnimationFilter extends React.Component {
         document.addEventListener('mousemove', onDocumentMouseMove, false);
         document.addEventListener('mousedown', onDocumentMouseDown, false);
         window.addEventListener( 'resize', resizeCanvas );
+
+        window.addEventListener("hashchange", onHashChange, false);
 
         function initGl(){
             gl = getWebGLContext(canvas);
@@ -82,15 +102,14 @@ class AnimationFilter extends React.Component {
             lastFrameFbo.allocate(canvas.width, canvas.height, interpMode);
             blackFbo.allocate(canvas.width, canvas.height, interpMode);
 
-            baseVs = createShaderFromScriptElement(gl, "baseVs");
-            translateVs = createShaderFromScriptElement(gl, "translateVs");
-
-            baseFs = createShaderFromScriptElement(gl, "baseFs");
-            contrastFrag = createShaderFromScriptElement(gl, "contrastFrag");
-            blurFrag = createShaderFromScriptElement(gl, "blurFrag");
-            reposFrag = createShaderFromScriptElement(gl, "reposFrag");
-            flowFrag = createShaderFromScriptElement(gl, "flowFrag");
-            blackFrag = createShaderFromScriptElement(gl, "blackFrag");
+            baseVs = createShaderFromFile(gl, baseVsFile, gl.VERTEX_SHADER);
+            translateVs = createShaderFromFile(gl, translateVsFile, gl.VERTEX_SHADER);
+            baseFs = createShaderFromFile(gl, baseFsFile, gl.FRAGMENT_SHADER);
+            blurFrag = createShaderFromFile(gl, blurFile, gl.FRAGMENT_SHADER);
+            contrastFrag = createShaderFromFile(gl, contrastFragFile, gl.FRAGMENT_SHADER);
+            flowFrag = createShaderFromFile(gl, flowFragFile, gl.FRAGMENT_SHADER);
+            reposFrag = createShaderFromFile(gl, reposFragFile, gl.FRAGMENT_SHADER);
+            blackFrag = createShaderFromFile(gl, blackFragFile, gl.FRAGMENT_SHADER);
 
             baseProgram = createProgram(gl, [baseVs, baseFs]);
             contrastProgram = createProgram(gl, [baseVs, contrastFrag]);
@@ -162,8 +181,7 @@ class AnimationFilter extends React.Component {
 
         function getCamAsTexture(){
             camTex = createAndSetupTexture(gl);
-            camTex.image = video;
-
+            camTex.image = document.getElementById('absolute');
             gl.bindTexture(gl.TEXTURE_2D, camTex);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, camTex.image);
         }
@@ -191,6 +209,52 @@ class AnimationFilter extends React.Component {
             refreshView();
         }
 
+        function httpGetAsync(theUrl, callback) {
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function() {
+                if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                    callback(xmlHttp.responseText);
+            }
+            xmlHttp.open("GET", theUrl, true); // true for asynchronous
+            xmlHttp.send(null);
+        }
+
+        function onHashChange() {
+
+            // console.log(props.activeTrack.track.audioData);
+            httpGetAsync('./' + props.activeTrack.track.audioData, function(response){
+                audioData = JSON.parse(response);
+            });
+
+            // setFilterconfiguration()
+            internalClock = 0;
+            // changeAnimation(internalClock);
+            let tick = 1;
+
+            if (firstTimer === null) {
+                clearInterval(nextTimer);
+
+                firstTimer = setInterval(function () {
+                    // console.log('AM-clock', internalClock);
+                    runAnalyser(internalClock);
+                    internalClock = internalClock + 1;
+                }, 46);
+
+                nextTimer = null;
+            } else if (nextTimer === null) {
+                clearInterval(firstTimer);
+
+                nextTimer = setInterval(function () {
+                    // console.log('PM-clock', internalClock);
+                    runAnalyser(internalClock);
+                    internalClock = internalClock + 1;
+                }, 46);
+
+                firstTimer = null;
+            }
+
+        }
+
         function refreshView() {
             getNewImg();
             interpMode = !interpMode;
@@ -204,12 +268,16 @@ class AnimationFilter extends React.Component {
         }
 
         function handleVideo() {
-            video.src =  './video/trim_2.mp4';
+            video.src =  './video/002.mp4';
+            // video.src =  './video/trim_2.mp4';
+            // video.src =  './video/test_4.mov';
+            // video.src =  './video/arrow.png';
 
-            console.log(video.src);
             video.loop = true;
             video.play();
+
             videoLoaded = true;
+            fish.src = './data/_displacement_fish1.png';
         }
 
         initGl();
@@ -218,31 +286,267 @@ class AnimationFilter extends React.Component {
         resizeCanvas();
         loop();
 
-        // debugger;
+        function runAnalyser(time) {
+            if (audioData.matrix[time] !== undefined) {
+                // console.log(time, audioData.matrix[time].index, audioData.matrix[time].analyser);
+                audioOutput = audioData.matrix[time].analyser;
+                mapMouseX = map(audioOutput[0]*0.6, window.innerWidth, 1.09,0.99);
+                mapMouseY = map(audioOutput[2]*0.6, window.innerHeight, 1.09,0.99); // console.log(mapMouseX, mapMouseY);
+            }
+        }
+
+        handleVideo();
+        onHashChange();
+    }
+
+    //TODO(jf): move this in a separate module
+    playShaderAnimation() {
+        var renderer = PIXI.autoDetectRenderer(630, 410);
+        renderer.view.style.position = "absolute";
+        renderer.view.id = "absolute";
+        renderer.view.style.top = 0;
+        renderer.view.style['z-index'] = -1;
+        renderer.view.style.width = window.innerWidth + "px";
+        renderer.view.style.height = window.innerHeight + "px";
+        renderer.view.style.display = "block";
+
+        var filtersSwitchs = [true, false, false, false, false, false, false, false, false, false, false];
+
+        document.getElementsByTagName('body')[0].appendChild(renderer.view);
+
+        if ($('.dg').length) {
+            $('.dg').remove();
+        }
+
+        let gui = new dat.GUI();
+        dat.GUI.toggleHide();
 
 
-        setInterval(function() {
-            var audioInput = $('#audioValue').attr('data');
-            var randomnumber = Math.floor(Math.random()*11)*10;
+        var displacementTexture = PIXI.Texture.fromImage("data/t4_biomes_map.jpg");
+        var displacementFilter = new PIXI.DisplacementFilter(displacementTexture);
 
-            console.log(audioInput);
+        var displacementFolder = gui.addFolder('Displacement');
+        displacementFolder.add(filtersSwitchs, '0').name("apply");
+        displacementFolder.add(displacementFilter.scale, 'x', 0, 200).name("scaleX");
+        displacementFolder.add(displacementFilter.scale, 'y', 0, 200).name("scaleY");
 
-            if (audioInput > 7 && audioInput < 8) {
-                mapMouseX = map(10 * audioInput, window.innerWidth, 1.09,0.99);
-                mapMouseY = map(50 * audioInput, window.innerHeight, 1.09,0.99);
-            } else if (audioInput > 9 && audioInput < 10) {
-                console.log('oink');
-                mapMouseX = map(randomnumber * audioInput, window.innerWidth, 1.09,0.99);
-                mapMouseY = map(randomnumber * audioInput, window.innerHeight, 1.09,0.99);
-            } else if (audioInput > 13  && audioInput < 14) {
-                refreshView();
+        var blurFilter = new PIXI.BlurFilter();
+
+        var blurFolder = gui.addFolder('Blur');
+        blurFolder.add(filtersSwitchs, '1').name("apply").listen();
+        blurFolder.add(blurFilter, 'blurX', 0, 32).name("blurX");
+        blurFolder.add(blurFilter, 'blurY', 0, 32).name("blurY");
+
+        ////
+
+        var pixelateFilter = new PIXI.PixelateFilter();
+
+        var pixelateFolder = gui.addFolder('Pixelate');
+        pixelateFolder.add(filtersSwitchs, '2').name("apply");
+        pixelateFolder.add(pixelateFilter.size, 'x', 1, 32).name("PixelSizeX");
+        pixelateFolder.add(pixelateFilter.size, 'y', 1, 32).name("PixelSizeY");
+
+        ////
+
+        var invertFilter = new PIXI.InvertFilter();
+
+        var invertFolder = gui.addFolder('Invert');
+        invertFolder.add(filtersSwitchs, '3').name("apply");
+        invertFolder.add(invertFilter, 'invert', 0, 1).name("Invert");
+
+        ////
+
+        var grayFilter = new PIXI.GrayFilter();
+
+        var grayFolder = gui.addFolder('Gray');
+        grayFolder.add(filtersSwitchs, '4').name("apply");
+        grayFolder.add(grayFilter, 'gray', 0, 1).name("Gray");
+
+        ////
+
+        var sepiaFilter = new PIXI.SepiaFilter();
+
+        var sepiaFolder = gui.addFolder('Sepia');
+        sepiaFolder.add(filtersSwitchs, '5').name("apply");
+        sepiaFolder.add(sepiaFilter, 'sepia', 0, 1).name("Sepia");
+
+        ////
+
+        var twistFilter = new PIXI.TwistFilter();
+
+        var twistFolder = gui.addFolder('Twist');
+        twistFolder.add(filtersSwitchs, '6').name("apply");
+        twistFolder.add(twistFilter, 'angle', 0, 10).name("Angle");
+        twistFolder.add(twistFilter, 'radius', 0, 1).name("Radius");
+
+        twistFolder.add(twistFilter.offset, 'x', 0, 1).name("offset.x");;
+        twistFolder.add(twistFilter.offset, 'y', 0, 1).name("offset.y");;
+
+        ////
+
+        var dotScreenFilter = new PIXI.DotScreenFilter();
+
+        var dotScreenFolder = gui.addFolder('DotScreen');
+        dotScreenFolder.add(filtersSwitchs, '7').name("apply");
+        dotScreenFolder.add(dotScreenFilter, 'angle', 0, 10);
+        dotScreenFolder.add(dotScreenFilter, 'scale', 0, 1);
+
+        ////
+
+        var colorStepFilter = new PIXI.ColorStepFilter();
+
+        var colorStepFolder = gui.addFolder('ColorStep');
+        colorStepFolder.add(filtersSwitchs, '8').name("apply");
+
+        colorStepFolder.add(colorStepFilter, 'step', 1, 100);
+        colorStepFolder.add(colorStepFilter, 'step', 1, 100);
+
+        ////
+
+        var crossHatchFilter = new PIXI.CrossHatchFilter();
+
+        var crossHatchFolder = gui.addFolder('CrossHatch');
+        crossHatchFolder.add(filtersSwitchs, '9').name("apply");
+
+
+//	var filterCollection = [blurFilter, pixelateFilter, invertFilter, grayFilter, sepiaFilter, twistFilter, dotScreenFilter, //colorStepFilter, crossHatchFilter];
+
+        var rgbSplitterFilter = new PIXI.RGBSplitFilter();
+
+        var rgbSplitFolder = gui.addFolder('RGB Splitter');
+        rgbSplitFolder.add(filtersSwitchs, '10').name("apply");
+
+
+        var filterCollection = [displacementFilter, blurFilter, pixelateFilter, invertFilter, grayFilter, sepiaFilter, twistFilter, dotScreenFilter, colorStepFilter, crossHatchFilter, rgbSplitterFilter];
+
+
+        // create an new instance of a pixi stage
+        var stage = new PIXI.Stage(0xFF0000, true);
+
+
+
+        var pondContainer = new PIXI.DisplayObjectContainer();
+        stage.addChild(pondContainer);
+
+        stage.interactive = true;
+
+        var bg = PIXI.Sprite.fromImage("data/displacement_BG.jpg");
+        pondContainer.addChild(bg);
+
+        PIXI.Texture.fromImage("data/displacement_BG.jpg");
+        PIXI.Texture.fromImage("data/displacement_BG1.jpg");
+        PIXI.Texture.fromImage("data/displacement_BG2.jpg");
+
+        //var fish = PIXI.Sprite.fromImage("displacement_fish2.jpg");//
+        //littleDudes.position.y = 100;
+        var padding = 100;
+        var bounds = new PIXI.Rectangle(-padding, -padding, 630 + padding * 2, 410 + padding * 2)
+        var fishs = [];
+
+        window.addEventListener("hashchange", onhashChange2, false);
+
+
+        function onhashChange2() {
+            changeBackground()
+        }
+
+        function changeBackground() {
+            if (window.location.hash === '#/empire_sounds') {
+               bg.setTexture(PIXI.Texture.fromFrame('data/displacement_BG.jpg'));
+            } else if (window.location.hash === '#/last_minute_change_of_heart') {
+                bg.setTexture(PIXI.Texture.fromFrame('data/displacement_BG1.jpg'));
+            } else if (window.location.hash === '#/biomes') {
+                bg.setTexture(PIXI.Texture.fromFrame('data/displacement_BG2.jpg'));
+            }
+        }
+
+
+        for (var i = 0; i < 20; i++)
+        {
+            var fishId = i % 4;
+            fishId += 1;
+
+            //console.log("displacement_fish"+fishId+".png")
+            var fish =  PIXI.Sprite.fromImage("data/displacement_fish"+fishId+".png");
+            fish.anchor.x = fish.anchor.y = 0.5;
+            pondContainer.addChild(fish);
+
+            //var direction
+            //var speed =
+            fish.direction = Math.random() * Math.PI * 2;
+            fish.speed = 2 + Math.random() * 2;
+            fish.turnSpeed = Math.random() - 0.8;
+
+            fish.position.x = Math.random() * bounds.width;
+            fish.position.y = Math.random() * bounds.height;
+            //fish.speed = new PIXI.Point(0,0)
+
+            fish.scale.x = fish.scale.y = 0.8 + Math.random() * 0.3;
+            fishs.push(fish);
+
+        };
+
+        var overlay = new PIXI.TilingSprite(PIXI.Texture.fromImage("data/zeldaWaves.png"), 630, 410);
+        overlay.alpha = 0.1//0.2
+        pondContainer.addChild(overlay);
+
+
+        displacementFilter.scale.x = 178;
+        displacementFilter.scale.y = 200;
+        dotScreenFilter.scale = 0;
+
+
+        var count = 0;
+        var switchy = false;
+
+        requestAnimFrame(animate);
+
+        function animate() {
+
+            count += 0.1;
+
+            var blurAmount = Math.cos(count) ;
+            var blurAmount2 = Math.sin(count * 0.8)  ;
+
+            var filtersToApply = [];
+
+            for (var i = 0; i < filterCollection.length; i++) {
+
+                if(filtersSwitchs[i])filtersToApply.push(filterCollection[i]);
+            };
+
+            pondContainer.filters = filtersToApply.length > 0 ? filtersToApply : null;
+
+            for (var i = 0; i < fishs.length; i++)
+            {
+                var fish = fishs[i];
+
+                fish.direction += fish.turnSpeed * 0.01;
+                fish.position.x += Math.sin(fish.direction) * fish.speed;
+                fish.position.y += Math.cos(fish.direction) * fish.speed;
+
+                fish.rotation = -fish.direction - Math.PI/2;
+
+                // wrap..
+
+                if(fish.position.x < bounds.x)fish.position.x += bounds.width;
+                if(fish.position.x > bounds.x + bounds.width)fish.position.x -= bounds.width
+
+                if(fish.position.y < bounds.y)fish.position.y += bounds.height;
+                if(fish.position.y > bounds.y + bounds.height)fish.position.y -= bounds.height
             }
 
-        }, 100);
 
-        // window.addEventListener('DOMContentLoaded', function(){
-            handleVideo();
-        // });
+            displacementFilter.offset.x = count * 10//blurAmount * 40;
+            displacementFilter.offset.y = count * 10
+
+            overlay.tilePosition.x = count * -10//blurAmount * 40;
+            overlay.tilePosition.y = count * -10
+
+            renderer.render(stage);
+            requestAnimFrame( animate );
+            changeBackground();
+        }
     }
 
     render() {
@@ -250,7 +554,8 @@ class AnimationFilter extends React.Component {
 
         return(
             <div id="container">
-                <canvas id="canvas">
+
+                <canvas id="canvas" style={{background:'black', position:'absolute', top:0, left:0, width:'100%', height:'100%'}}>
                     Sorry but you're browser doesn't support the canvas :(
                 </canvas>
             </div>

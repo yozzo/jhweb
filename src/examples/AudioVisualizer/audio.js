@@ -4,7 +4,8 @@ let context,
     source,
     sourceJs,
     analyser,
-    boost = 0;
+    boost = 0,
+    matrix = [];
 
 class AudioAnalyzer extends React.Component {
 
@@ -99,27 +100,76 @@ class AudioAnalyzer extends React.Component {
                         sourceJs.connect(context.destination);
                         analyser = context.createAnalyser();
                         analyser.smoothingTimeConstant = 0.6;
-                        analyser.fftSize = 512;
+                        analyser.fftSize = 32;
 
                         source = context.createBufferSource();
                         source.buffer = buffer;
-                        source.loop = true;
+                        source.loop = false;
                         source.connect(analyser);
                         analyser.connect(sourceJs);
                         source.connect(context.destination);
                         source.start(0); //play
+
+                        var a = performance.now();
+                        let index = 0;
+                            let audioObject = {
+                                'audioUrl': audioUrl
+                            };
+
+                        let audioData = [];
+
                         sourceJs.onaudioprocess = function (e) {
                             array = new Uint8Array(analyser.frequencyBinCount);
                             analyser.getByteFrequencyData(array);
                             boost = 0;
 
+
+
+
                             for (var i = 0; i < array.length; i++) {
+
                                 boost += array[i];
+                                // console.log('>>> i >>>> ', boost, i, array[i]);
                             }
-                            boost = boost / array.length;
+                            // boost = boost / array.length;
+
+                            var b = performance.now();
+
+
+                            audioData = {
+                                analyser: [array[0], array[1], array[2], array[3], array[4]],
+                                index: index,
+                                timeStamp: b - a
+                            };
+
+
+
+                            // console.log(audioObject);
 
 
                         };
+
+                        setInterval(function(){
+                            matrix.push(audioData);
+                            audioObject.matrix = matrix;
+
+                            // console.log('ce?');
+
+
+                            index++;
+                        }, 46);
+
+
+                        setTimeout(function() {
+                            source.disconnect(analyser);
+                            analyser.disconnect(sourceJs);
+                            source.disconnect(context.destination);
+
+                            console.log(audioObject);
+                            window.localStorage.setItem(audioUrl,  JSON.stringify(audioObject));
+                        }, 122400); //set track time in milliseconds
+
+
 
                     },
                     function (error) {
