@@ -26,6 +26,18 @@ import Ruqia from './T1-Ruqia/index';
 
 const songs = [
     {
+        url: 'data/04 Biomes(Shorter_Immersive_Website_Version).mp3',
+        cover: 'path/to/jpeg',
+        component: Ruqia,
+        slug: 'biomes',
+
+        track: {
+            name: 'Biomes',
+            audioData: 'data/JSON/04.json',
+            spotifyUrl: 'https://open.spotify.com/track/4bOF8DXNCvK5thdzzpQnMy'
+        }
+    },
+    {
         url: 'data/02 Empire Sounds(Shorter_Immersive_Website_Version).mp3',
         component: Ruqia,
         slug: 'empire_sounds',
@@ -33,7 +45,7 @@ const songs = [
         track: {
             name: 'Empire Sounds',
             audioData: 'data/JSON/02.json',
-            spotifyUrl: 'https://open.spotify.com/album/3ILBGXvUwP6kVni9wAFuCU'
+            spotifyUrl: 'https://open.spotify.com/track/4bOF8DXNCvK5thdzzpQnMy'
         }
     },
     {
@@ -44,9 +56,9 @@ const songs = [
         track: {
             name: 'Last Minute Change Of Heart',
             audioData: 'data/JSON/05.json',
-            spotifyUrl: 'https://open.spotify.com/album/3ILBGXvUwP6kVni9wAFuCU'
+            spotifyUrl: 'https://open.spotify.com/track/4bOF8DXNCvK5thdzzpQnMy'
         }
-    },
+    }
     // {
     //     url: 'data/03 MHope(Shorter_Immersive_Website_Version).mp3',
     //     component: Ruqia,
@@ -58,18 +70,7 @@ const songs = [
     //         spotifyUrl: 'https://open.spotify.com/album/3ILBGXvUwP6kVni9wAFuCU'
     //     }
     // },
-    {
-        url: 'data/04 Biomes(Shorter_Immersive_Website_Version).mp3',
-        cover: 'path/to/jpeg',
-        component: Ruqia,
-        slug: 'biomes',
 
-        track: {
-            name: 'Biomes',
-            audioData: 'data/JSON/04.json',
-            spotifyUrl: 'https://open.spotify.com/album/3ILBGXvUwP6kVni9wAFuCU'
-        }
-    }
 ];
 
 const TrackBrowser = ({ params }) => {

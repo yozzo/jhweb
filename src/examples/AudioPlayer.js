@@ -3,8 +3,10 @@ import { Link } from 'react-router';
 import { hashHistory } from 'react-router';
 import classnames from 'classnames';
 import shuffle from 'shuffle-array';
+import Rodal from 'rodal';
 
 class AudioPlayer extends Component {
+
     state = {
         active: this.props.activeTrack,
         current: 0,
@@ -15,7 +17,8 @@ class AudioPlayer extends Component {
         repeat: false,
         mute: false,
         play: this.props.autoplay || true,
-        songs: this.props.songs
+        songs: this.props.songs,
+        visible: false
     }
 
     componentDidMount = () => {
@@ -201,6 +204,32 @@ class AudioPlayer extends Component {
         this.next();
     }
 
+    onMouseMove = () => {
+        // let timer = null;
+        //
+        // if (!this.state.visible) {
+        //         clearTimeout(timer);
+        //         this.setState({visibility: true});
+        //         timer = setTimeout(this.setState({visibility: false}), 6000);
+        //
+        // } else {
+        //     clearTimeout(timer);
+        // }
+    }
+
+    showAbout() {
+        this.setState({ visible: true });
+        // this.setState({ infoContent: $('.about').html()});
+    }
+
+    createMarkup() {
+        return {__html: $('.about').html()};
+    }
+
+    hide() {
+        this.setState({ visible: false });
+    }
+
     render () {
 
         const { active, play, progress, next, prev, songs } = this.state;
@@ -222,56 +251,64 @@ class AudioPlayer extends Component {
                     on<br/>
                     piano</h2>
 
-            <div className="player-container">
-                {/*<span className="player-progress-container-wrapper" onClick={this.setProgress}>*/}
-                <span className="player-progress-container-wrapper">
-                    <span className="player-progress-value" style={{height: progress + '%'}}></span>
-                    <div className="player-progress-container"></div>
-                </span>
-
-                <audio src={active.url} autoPlay={this.state.play} preload="auto" ref="player"></audio>
-
-                <div className="track-info">
-                    <span className="track-tag">Playing Excerpt</span>
-                    <h2 className="track-name">{active.track.name}</h2>
-                    <div className="track-link-wrapper">
-                        <a href={active.track.spotifyUrl} className="track-link" target="_blank">Full Listen</a>
-                    </div>
+                <div className="heading-link-container">
+                    <a className="heading-link" onClick={this.showAbout.bind(this)}>About</a>
+                    <a href="http://www.songkick.com/artists/9131569" target="_blank" className="heading-link songkick-widget">Tour</a>
                 </div>
 
-                <div className="player-options">
-                    <div className="player-buttons player-controls">
-                        <Link to={`/${songs[prev].slug}`} onClick={this.previous} className="player-btn medium hide" title="Previous Song">
-                            <i className="fa fa-backward" />
-                        </Link>
+                <Rodal visible={this.state.visible} onClose={this.hide.bind(this)}>
+                    <div className="rodal-content" dangerouslySetInnerHTML={this.createMarkup()}/>
+                </Rodal>
 
-                        <button onClick={this.toggle} className="player-btn big" title="Play/Pause">
-                            <i className={playPauseClass} />
-                        </button>
+                <div className="player-container">
+                    {/*<span className="player-progress-container-wrapper" onClick={this.setProgress}>*/}
+                    <span className="player-progress-container-wrapper">
+                        <span className="player-progress-value" style={{height: progress + '%'}}></span>
+                        <div className="player-progress-container"></div>
+                    </span>
 
-                        <Link to={`/${songs[next].slug}`} onClick={this.next} ref={button => this.nextButton = button}  className="player-btn medium" title="Next Song">
-                            <i className="fa fa-forward" />
-                        </Link>
+                    <audio src={active.url} autoPlay={this.state.play} preload="auto" ref="player"></audio>
+
+                    <div className="track-info">
+                        <span className="track-tag">Playing Excerpt</span>
+                        <h2 className="track-name">{active.track.name}</h2>
+                        <div className="track-link-wrapper">
+                            <a href={active.track.spotifyUrl} className="track-link" target="_blank">Full Listen</a>
+                        </div>
                     </div>
 
-                    <div className="player-buttons">
-                        <button className="player-btn small volume" onClick={this.toggleMute} title="Mute/Unmute">
-                            <i className={volumeClass} />
-                        </button>
+                    <div className="player-options">
+                        <div className="player-buttons player-controls">
+                            <Link to={`/${songs[prev].slug}`} onClick={this.previous} className="player-btn medium hide" title="Previous Song">
+                                <i className="fa fa-backward" />
+                            </Link>
 
-                        <button className={repeatClass} onClick={this.repeat} title="Repeat">
-                            <i className="fa fa-repeat" />
-                        </button>
+                            <button onClick={this.toggle} className="player-btn big" title="Play/Pause">
+                                <i className={playPauseClass} />
+                            </button>
 
-                        <button className={randomClass} onClick={this.randomize} title="Shuffle">
-                            <i className="fa fa-random" />
-                        </button>
+                            <Link to={`/${songs[next].slug}`} onClick={this.next} ref={button => this.nextButton = button}  className="player-btn medium" title="Next Song">
+                                <i className="fa fa-forward" />
+                            </Link>
+                        </div>
+
+                        <div className="player-buttons">
+                            <button className="player-btn small volume" onClick={this.toggleMute} title="Mute/Unmute">
+                                <i className={volumeClass} />
+                            </button>
+
+                            <button className={repeatClass} onClick={this.repeat} title="Repeat">
+                                <i className="fa fa-repeat" />
+                            </button>
+
+                            <button className={randomClass} onClick={this.randomize} title="Shuffle">
+                                <i className="fa fa-random" />
+                            </button>
+                        </div>
+
                     </div>
-
                 </div>
             </div>
-            </div>
-
         );
     }
 }

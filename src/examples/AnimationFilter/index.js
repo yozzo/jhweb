@@ -35,7 +35,7 @@ class AnimationFilter extends React.Component {
     }
 
     componentDidUpdate() {
-        console.log('=========== component did update ===============');
+
     }
 
     /**
@@ -201,8 +201,8 @@ class AnimationFilter extends React.Component {
             mouseX = (event.clientX );
             mouseY = (event.clientY );
 
-            mapMouseX = map(mouseX, window.innerWidth, 1.09,0.99);
-            mapMouseY = map(mouseY, window.innerHeight, 1.09,0.99);
+            mapMouseX = map(audioOutput[0]*1, window.innerWidth, 1.09,0.99);
+            mapMouseY = map(audioOutput[1]*1, window.innerHeight, 1.09,0.99);
         }
 
         function onDocumentMouseDown(event) {
@@ -288,10 +288,9 @@ class AnimationFilter extends React.Component {
 
         function runAnalyser(time) {
             if (audioData.matrix[time] !== undefined) {
-                // console.log(time, audioData.matrix[time].index, audioData.matrix[time].analyser);
                 audioOutput = audioData.matrix[time].analyser;
                 mapMouseX = map(audioOutput[0]*0.6, window.innerWidth, 1.09,0.99);
-                mapMouseY = map(audioOutput[2]*0.6, window.innerHeight, 1.09,0.99); // console.log(mapMouseX, mapMouseY);
+                mapMouseY = map(audioOutput[2]*0.6, window.innerHeight, 1.09,0.99);
             }
         }
 
@@ -554,7 +553,6 @@ class AnimationFilter extends React.Component {
 
         return(
             <div id="container">
-
                 <canvas id="canvas" style={{background:'black', position:'absolute', top:0, left:0, width:'100%', height:'100%'}}>
                     Sorry but you're browser doesn't support the canvas :(
                 </canvas>
