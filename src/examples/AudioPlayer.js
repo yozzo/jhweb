@@ -16,9 +16,10 @@ class AudioPlayer extends Component {
         random: false,
         repeat: false,
         mute: false,
-        play: this.props.autoplay || true,
+        play: !this.props.isMobile || false,
         songs: this.props.songs,
-        visible: false
+        visible: false,
+        isMobile: this.props.isMobile
     }
 
     componentDidMount = () => {
@@ -63,16 +64,8 @@ class AudioPlayer extends Component {
     }
 
     play = () => {
-
-        // debugger;
         let player = this.refs.player;
         this.setState({ play: true });
-
-        // this.refs.player.volume = 0;
-        // this.getActiveTrack();
-// debugger;
-//         hashHistory.push('/' + active.slug);
-
 
         setTimeout(() => {
             player.play();
@@ -157,7 +150,6 @@ class AudioPlayer extends Component {
         const total = this.state.songs.length;
         let next;
 
-        // debugger
         if (this.state.next >= total - 1 || current === total - 1) {
             next = 0
         }
@@ -166,10 +158,6 @@ class AudioPlayer extends Component {
         }
         else {
             next = current + 1;
-        }
-
-        if (next === 4) {
-            debugger;
         }
 
         this.setState({next: next});
@@ -204,22 +192,8 @@ class AudioPlayer extends Component {
         this.next();
     }
 
-    onMouseMove = () => {
-        // let timer = null;
-        //
-        // if (!this.state.visible) {
-        //         clearTimeout(timer);
-        //         this.setState({visibility: true});
-        //         timer = setTimeout(this.setState({visibility: false}), 6000);
-        //
-        // } else {
-        //     clearTimeout(timer);
-        // }
-    }
-
     showAbout() {
         this.setState({ visible: true });
-        // this.setState({ infoContent: $('.about').html()});
     }
 
     createMarkup() {
@@ -232,13 +206,12 @@ class AudioPlayer extends Component {
 
     render () {
 
-        const { active, play, progress, next, prev, songs } = this.state;
+        const { active, play, progress, next, prev, songs, isMobile } = this.state;
 
         let playPauseClass = classnames('fa', {'fa-pause': play}, {'fa-play': !play});
         let volumeClass = classnames('fa', {'fa-volume-up': !this.state.mute}, {'fa-volume-off': this.state.mute});
         let repeatClass = classnames('player-btn small repeat', {'active': this.state.repeat});
         let randomClass = classnames('player-btn small random', {'active': this.state.random });
-
         return (
             <div>
                 <h1 className="heading-name">JAMES<br/>
@@ -254,7 +227,7 @@ class AudioPlayer extends Component {
                 <div className="heading-link-container">
                     <a className="heading-link" onClick={this.showAbout.bind(this)}>About</a>
                     <a href="http://www.songkick.com/artists/9131569" target="_blank" className="heading-link songkick-widget">Tour</a>
-                    <a href=" https://ninjatune.net/artist/james-heather" target="_blank" className="heading-link">Shop</a>
+                    <a href="https://jamesheather.lnk.to/stories/" target="_blank" className="heading-link">Shop</a>
                 </div>
 
                 <Rodal visible={this.state.visible} onClose={this.hide.bind(this)}>
@@ -268,7 +241,7 @@ class AudioPlayer extends Component {
                         <div className="player-progress-container"></div>
                     </span>
 
-                    <audio src={active.url} autoPlay={this.state.play} preload="auto" ref="player"></audio>
+                    <audio src={active.url} autoPlay={!this.state.isMobile} preload="auto" ref="player"></audio>
 
                     <div className="track-info">
                         <span className="track-tag">Playing Excerpt</span>

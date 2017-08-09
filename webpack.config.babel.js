@@ -81,6 +81,7 @@ export default {
   devServer: {
     contentBase: path.join(__dirname, 'assets'),
     // noInfo: true, //  --no-info option
+      disableHostCheck: true,
     hot: true,
     inline: true,
     stats: { colors: true },

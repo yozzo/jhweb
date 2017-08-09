@@ -19,23 +19,27 @@ class AnimationFilter extends React.Component {
         this.state = {
             boost: 0,
             audioUrl: props.audioUrl,
-            playing: false
+            playing: false,
+            activeTrack: props.activeTrack
         };
 
-        // let lib = new AnimationLib;
-        // lib.init();
     }
 
     componentDidMount() {
-        // debugger;
-
-
+        // this.setActivetrack();
         this.playShaderAnimation();
         this.initFilter(this.state, this.props);
     }
 
     componentDidUpdate() {
+        if (this.props.activeTrack.url !== this.state.activeTrack.url) {
+            this.setActivetrack();
+        }
+    }
 
+    setActivetrack() {
+        let activeTrack = this.props.activeTrack;
+        this.setState({activeTrack: activeTrack});
     }
 
     /**
@@ -201,8 +205,8 @@ class AnimationFilter extends React.Component {
             mouseX = (event.clientX );
             mouseY = (event.clientY );
 
-            mapMouseX = map(audioOutput[0]*1, window.innerWidth, 1.09,0.99);
-            mapMouseY = map(audioOutput[1]*1, window.innerHeight, 1.09,0.99);
+            mapMouseX = map(10, window.innerWidth, 1.09,0.99);
+            mapMouseY = map(10, window.innerHeight, 1.09,0.99);
         }
 
         function onDocumentMouseDown(event) {
@@ -220,15 +224,11 @@ class AnimationFilter extends React.Component {
         }
 
         function onHashChange() {
-
-            // console.log(props.activeTrack.track.audioData);
             httpGetAsync('./' + props.activeTrack.track.audioData, function(response){
                 audioData = JSON.parse(response);
             });
 
-            // setFilterconfiguration()
             internalClock = 0;
-            // changeAnimation(internalClock);
             let tick = 1;
 
             if (firstTimer === null) {
@@ -252,7 +252,6 @@ class AnimationFilter extends React.Component {
 
                 firstTimer = null;
             }
-
         }
 
         function refreshView() {
@@ -287,7 +286,7 @@ class AnimationFilter extends React.Component {
         loop();
 
         function runAnalyser(time) {
-            if (audioData.matrix[time] !== undefined) {
+            if (audioData && audioData.matrix[time] !== undefined) {
                 audioOutput = audioData.matrix[time].analyser;
                 mapMouseX = map(audioOutput[0]*0.6, window.innerWidth, 1.09,0.99);
                 mapMouseY = map(audioOutput[2]*0.6, window.innerHeight, 1.09,0.99);
@@ -304,10 +303,8 @@ class AnimationFilter extends React.Component {
         renderer.view.style.position = "absolute";
         renderer.view.id = "absolute";
         renderer.view.style.top = 0;
-        renderer.view.style['z-index'] = -1;
         renderer.view.style.width = window.innerWidth + "px";
         renderer.view.style.height = window.innerHeight + "px";
-        renderer.view.style.display = "block";
 
         var filtersSwitchs = [true, false, false, false, false, false, false, false, false, false, false];
 

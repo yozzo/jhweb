@@ -562,10 +562,18 @@ body {
 
 @media screen and (max-width: 39.9375em) {
   .subscribe__links {
-    top: 0; } }
+    top: 0; }
+
+  body {
+    background: url("../data/mobile-bg.jpg") no-repeat #000000;
+    background-size: cover; } }
 @media screen and (min-width: 40em) {
   .subscribe__links {
-    bottom: 0; } }
+    bottom: 0; }
+
+  #absolute {
+    z-index: -1;
+    display: block; } }
 .follow {
   -webkit-filter: saturate(0%) grayscale(100%) brightness(69%) contrast(400%); }
 
