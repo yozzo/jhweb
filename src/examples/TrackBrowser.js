@@ -34,7 +34,7 @@ const songs = [
         track: {
             name: 'Biomes',
             audioData: 'data/JSON/04.json',
-            spotifyUrl: 'https://open.spotify.com/track/4bOF8DXNCvK5thdzzpQnMy'
+            spotifyUrl: 'https://jamesheather.lnk.to/biomes'
         }
     },
     {
@@ -45,7 +45,7 @@ const songs = [
         track: {
             name: 'Empire Sounds',
             audioData: 'data/JSON/02.json',
-            spotifyUrl: 'https://open.spotify.com/track/4bOF8DXNCvK5thdzzpQnMy'
+            spotifyUrl: 'https://jamesheather.lnk.to/empire'
         }
     },
     {
@@ -56,7 +56,7 @@ const songs = [
         track: {
             name: 'Last Minute Change Of Heart',
             audioData: 'data/JSON/05.json',
-            spotifyUrl: 'https://open.spotify.com/track/4bOF8DXNCvK5thdzzpQnMy'
+            spotifyUrl: 'https://jamesheather.lnk.to/lmcoh'
         }
     }
     // {

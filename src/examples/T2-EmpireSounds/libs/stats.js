@@ -4,8 +4,6 @@
 
 'use strict';
 
-console.log('stats');
-
 Object.defineProperty(exports, "__esModule", {
     value: true
 });

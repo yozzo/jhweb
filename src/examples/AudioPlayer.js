@@ -254,6 +254,7 @@ class AudioPlayer extends Component {
                 <div className="heading-link-container">
                     <a className="heading-link" onClick={this.showAbout.bind(this)}>About</a>
                     <a href="http://www.songkick.com/artists/9131569" target="_blank" className="heading-link songkick-widget">Tour</a>
+                    <a href=" https://ninjatune.net/artist/james-heather" target="_blank" className="heading-link">Shop</a>
                 </div>
 
                 <Rodal visible={this.state.visible} onClose={this.hide.bind(this)}>
