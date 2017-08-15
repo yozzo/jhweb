@@ -3,7 +3,7 @@ import {hashHistory} from 'react-router';
 
 class Homepage extends React.Component {
     componentDidMount = () => {
-        hashHistory.push('/biomes');
+        hashHistory.push('/ruqia');
     };
 
     render = () => {

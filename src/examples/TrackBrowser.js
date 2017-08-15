@@ -26,15 +26,15 @@ import Ruqia from './T1-Ruqia/index';
 
 const songs = [
     {
-        url: 'data/04 Biomes(Shorter_Immersive_Website_Version).mp3',
+        url: 'data/01 Ruqia(Shorter_Immersive_Website_Version).mp3',
         cover: 'path/to/jpeg',
         component: Ruqia,
-        slug: 'biomes',
+        slug: 'ruqia',
 
         track: {
-            name: 'Biomes',
-            audioData: 'data/JSON/04.json',
-            spotifyUrl: 'https://jamesheather.lnk.to/biomes'
+            name: 'Ruqia',
+            audioData: 'data/JSON/01.json',
+            spotifyUrl: 'https://jamesheather.lnk.to/ruqia'
         }
     },
     {
@@ -49,6 +49,29 @@ const songs = [
         }
     },
     {
+        url: 'data/03 MHope(Shorter_Immersive_Website_Version).mp3',
+        component: Ruqia,
+        slug: 'mhope',
+
+        track: {
+            name: '03/ MHope',
+            audioData: 'data/JSON/03.json',
+            spotifyUrl: 'https://jamesheather.lnk.to/mhope'
+        }
+    },
+    {
+        url: 'data/04 Biomes(Shorter_Immersive_Website_Version).mp3',
+        cover: 'path/to/jpeg',
+        component: Ruqia,
+        slug: 'biomes',
+
+        track: {
+            name: 'Biomes',
+            audioData: 'data/JSON/04.json',
+            spotifyUrl: 'https://jamesheather.lnk.to/biomes'
+        }
+    },
+    {
         url: 'data/05 Lastminutechangeofheart_(Shorter_Immersive_Website_Version).mp3',
         component: Ruqia,
         slug: 'last_minute_change_of_heart',
@@ -58,18 +81,52 @@ const songs = [
             audioData: 'data/JSON/05.json',
             spotifyUrl: 'https://jamesheather.lnk.to/lmcoh'
         }
+    },
+    {
+        url: 'data/06 Pathos(Shorter_Immersive_Website_Version).mp3',
+        component: Ruqia,
+        slug: 'pathos',
+
+        track: {
+            name: 'Pathos',
+            audioData: 'data/JSON/06.json',
+            spotifyUrl: 'https://jamesheather.lnk.to/pathos'
+        }
+    },
+    {
+        url: 'data/07 Teardrop_Tatoo(Shorter_Immersive_Website_Version).mp3',
+        component: Ruqia,
+        slug: 'teardrop_tattoo',
+
+        track: {
+            name: 'Teardrop Tattoo',
+            audioData: 'data/JSON/07.json',
+            spotifyUrl: 'https://jamesheather.lnk.to/teardrop_tattoo'
+        }
+    },
+    {
+        url: 'data/08 Kraken(Shorter_Immersive_Website_Version).mp3',
+        component: Ruqia,
+        slug: 'kraken',
+
+        track: {
+            name: 'Kraken',
+            audioData: 'data/JSON/08.json',
+            spotifyUrl: 'https://jamesheather.lnk.to/kraken'
+        }
+    },
+    {
+        url: 'data/09 Blueprint(Shorter_Immersive_Website_Version).mp3',
+        component: Ruqia,
+        slug: 'blueprint',
+
+        track: {
+            name: 'Blueprint',
+            audioData: 'data/JSON/09.json',
+            spotifyUrl: 'https://jamesheather.lnk.to/blueprint'
+        }
     }
-    // {
-    //     url: 'data/03 MHope(Shorter_Immersive_Website_Version).mp3',
-    //     component: Ruqia,
-    //     slug: 'mhope',
-    //
-    //     track: {
-    //         name: '03/ MHope',
-    //         audioData: 'data/JSON/03.json',
-    //         spotifyUrl: 'https://open.spotify.com/album/3ILBGXvUwP6kVni9wAFuCU'
-    //     }
-    // },
+
 
 ];
 

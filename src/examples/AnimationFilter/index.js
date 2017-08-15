@@ -26,7 +26,6 @@ class AnimationFilter extends React.Component {
     }
 
     componentDidMount() {
-        // this.setActivetrack();
         this.playShaderAnimation();
         this.initFilter(this.state, this.props);
     }
@@ -73,8 +72,9 @@ class AnimationFilter extends React.Component {
         document.addEventListener('mousemove', onDocumentMouseMove, false);
         document.addEventListener('mousedown', onDocumentMouseDown, false);
         window.addEventListener( 'resize', resizeCanvas );
+        $('window').on("hashchange", debounce(onHashChange, 500), false);
 
-        window.addEventListener("hashchange", onHashChange, false);
+
 
         function initGl(){
             gl = getWebGLContext(canvas);
@@ -223,8 +223,46 @@ class AnimationFilter extends React.Component {
             xmlHttp.send(null);
         }
 
+        function debounce(func, wait, immediate) {
+            var timeout;
+            return function() {
+                var context = this, args = arguments;
+                var later = function() {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+                var callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
+            };
+        };
+
         function onHashChange() {
-            httpGetAsync('./' + props.activeTrack.track.audioData, function(response){
+            let audioDataUrl;
+
+            if (window.location.hash === '#/ruqia') {
+                audioDataUrl = 'data/JSON/01.json';
+            } else if (window.location.hash === '#/empire_sounds') {
+                audioDataUrl = 'data/JSON/02.json';
+            } else if (window.location.hash === '#/last_minute_change_of_heart') {
+                audioDataUrl = 'data/JSON/05.json';
+            } else if (window.location.hash === '#/biomes') {
+                audioDataUrl = 'data/JSON/04.json';
+            } else if (window.location.hash === '#/mhope') {
+                audioDataUrl = 'data/JSON/03.json';
+            } else if (window.location.hash === '#/pathos') {
+                audioDataUrl = 'data/JSON/06.json';
+            } else if (window.location.hash === '#/teardrop_tattoo') {
+                audioDataUrl = 'data/JSON/07.json';
+            } else if (window.location.hash === '#/kraken') {
+                audioDataUrl = 'data/JSON/08.json';
+            } else if (window.location.hash === '#/blueprint') {
+                audioDataUrl = 'data/JSON/09.json';
+            }
+
+
+            httpGetAsync('./' + audioDataUrl, function(response){
                 audioData = JSON.parse(response);
             });
 
@@ -235,7 +273,6 @@ class AnimationFilter extends React.Component {
                 clearInterval(nextTimer);
 
                 firstTimer = setInterval(function () {
-                    // console.log('AM-clock', internalClock);
                     runAnalyser(internalClock);
                     internalClock = internalClock + 1;
                 }, 46);
@@ -245,7 +282,6 @@ class AnimationFilter extends React.Component {
                 clearInterval(firstTimer);
 
                 nextTimer = setInterval(function () {
-                    // console.log('PM-clock', internalClock);
                     runAnalyser(internalClock);
                     internalClock = internalClock + 1;
                 }, 46);
@@ -268,13 +304,8 @@ class AnimationFilter extends React.Component {
 
         function handleVideo() {
             video.src =  './video/002.mp4';
-            // video.src =  './video/trim_2.mp4';
-            // video.src =  './video/test_4.mov';
-            // video.src =  './video/arrow.png';
-
             video.loop = true;
             video.play();
-
             videoLoaded = true;
             fish.src = './data/_displacement_fish1.png';
         }
@@ -432,6 +463,13 @@ class AnimationFilter extends React.Component {
         PIXI.Texture.fromImage("data/displacement_BG.jpg");
         PIXI.Texture.fromImage("data/displacement_BG1.jpg");
         PIXI.Texture.fromImage("data/displacement_BG2.jpg");
+        PIXI.Texture.fromImage("data/displacement_BG3.jpg");
+        PIXI.Texture.fromImage("data/displacement_BG4.jpg");
+        PIXI.Texture.fromImage("data/displacement_BG5.jpg");
+        PIXI.Texture.fromImage("data/displacement_BG6.jpg");
+        PIXI.Texture.fromImage("data/displacement_BG7.jpg");
+        PIXI.Texture.fromImage("data/displacement_BG8.jpg");
+        PIXI.Texture.fromImage("data/displacement_BG9.jpg");
 
         //var fish = PIXI.Sprite.fromImage("displacement_fish2.jpg");//
         //littleDudes.position.y = 100;
@@ -439,12 +477,22 @@ class AnimationFilter extends React.Component {
         var bounds = new PIXI.Rectangle(-padding, -padding, 630 + padding * 2, 410 + padding * 2)
         var fishs = [];
 
-        window.addEventListener("hashchange", onhashChange2, false);
+        function debounce(func, wait, immediate) {
+            var timeout;
+            return function() {
+                var context = this, args = arguments;
+                var later = function() {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+                var callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
+            };
+        };
 
-
-        function onhashChange2() {
-            changeBackground()
-        }
+        window.addEventListener("hashchange", debounce(changeBackground, 500), false);
 
         function changeBackground() {
             if (window.location.hash === '#/empire_sounds') {
@@ -453,6 +501,18 @@ class AnimationFilter extends React.Component {
                 bg.setTexture(PIXI.Texture.fromFrame('data/displacement_BG1.jpg'));
             } else if (window.location.hash === '#/biomes') {
                 bg.setTexture(PIXI.Texture.fromFrame('data/displacement_BG2.jpg'));
+            } else if (window.location.hash === '#/ruqia') {
+                bg.setTexture(PIXI.Texture.fromFrame('data/displacement_BG3.jpg'));
+            } else if (window.location.hash === '#/mhope') {
+                bg.setTexture(PIXI.Texture.fromFrame('data/displacement_BG4.jpg'));
+            } else if (window.location.hash === '#/pathos') {
+                bg.setTexture(PIXI.Texture.fromFrame('data/displacement_BG6.jpg'));
+            } else if (window.location.hash === '#/teardrop_tattoo') {
+                bg.setTexture(PIXI.Texture.fromFrame('data/displacement_BG7.jpg'));
+            } else if (window.location.hash === '#/kraken') {
+                bg.setTexture(PIXI.Texture.fromFrame('data/displacement_BG8.jpg'));
+            } else if (window.location.hash === '#/blueprint') {
+                bg.setTexture(PIXI.Texture.fromFrame('data/displacement_BG9.jpg'));
             }
         }
 
