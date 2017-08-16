@@ -155,7 +155,7 @@ const TrackBrowser = ({ params }) => {
         <div>
             {/*<TrackViewer example={activeExample} />*/}
             <AudioPlayer songs={songs} activeTrack={activeExample} isMobile={isMobile}/>
-            <AnimationSwitch activeTrack={activeExample}/>
+            <AnimationFilter activeTrack={activeExample}/>
         </div>
     );
 };

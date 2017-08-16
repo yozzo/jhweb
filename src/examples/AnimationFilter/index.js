@@ -26,8 +26,14 @@ class AnimationFilter extends React.Component {
     }
 
     componentDidMount() {
-        this.playShaderAnimation();
-        this.initFilter(this.state, this.props);
+        if (!this.state.isPlaying) {
+            this.playShaderAnimation();
+            this.initFilter(this.state, this.props);
+        }
+    }
+
+    componentWillUnmount(){
+        console.log('unmount');
     }
 
     componentDidUpdate() {
@@ -72,7 +78,7 @@ class AnimationFilter extends React.Component {
         document.addEventListener('mousemove', onDocumentMouseMove, false);
         document.addEventListener('mousedown', onDocumentMouseDown, false);
         window.addEventListener( 'resize', resizeCanvas );
-        $('window').on("hashchange", debounce(onHashChange, 500), false);
+        // $('window').on("hashchange", debounce(onHashChange, 3000), false).off();
 
 
 
@@ -303,6 +309,7 @@ class AnimationFilter extends React.Component {
         }
 
         function handleVideo() {
+            refreshView();
             video.src =  './video/002.mp4';
             video.loop = true;
             video.play();
@@ -325,6 +332,8 @@ class AnimationFilter extends React.Component {
         }
 
         handleVideo();
+
+        console.log(state);
         onHashChange();
     }
 
@@ -465,7 +474,6 @@ class AnimationFilter extends React.Component {
         PIXI.Texture.fromImage("data/displacement_BG2.jpg");
         PIXI.Texture.fromImage("data/displacement_BG3.jpg");
         PIXI.Texture.fromImage("data/displacement_BG4.jpg");
-        PIXI.Texture.fromImage("data/displacement_BG5.jpg");
         PIXI.Texture.fromImage("data/displacement_BG6.jpg");
         PIXI.Texture.fromImage("data/displacement_BG7.jpg");
         PIXI.Texture.fromImage("data/displacement_BG8.jpg");
@@ -492,7 +500,7 @@ class AnimationFilter extends React.Component {
             };
         };
 
-        window.addEventListener("hashchange", debounce(changeBackground, 500), false);
+        // window.addEventListener("hashchange", debounce(changeBackground, 500), false);
 
         function changeBackground() {
             if (window.location.hash === '#/empire_sounds') {
@@ -603,16 +611,15 @@ class AnimationFilter extends React.Component {
             requestAnimFrame( animate );
             changeBackground();
         }
+
+        this.setState({isPlaying: true});
     }
 
     render() {
         // const ExampleComponent = this.props.children.props.videoInput;
 
         return(
-            <div id="container">
-                <canvas id="canvas" style={{background:'black', position:'absolute', top:0, left:0, width:'100%', height:'100%'}}>
-                    Sorry but you're browser doesn't support the canvas :(
-                </canvas>
+            <div>
             </div>
         )
     }

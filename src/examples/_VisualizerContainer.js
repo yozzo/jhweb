@@ -1,6 +1,5 @@
 import React from 'react';
 import AudioAnalyzer from 'AudioVisualizer/audio';
-import AnimationFilter from './AnimationFilter/index'
 
 class VisualizerContainer extends React.Component {
     constructor(props) {

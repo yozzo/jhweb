@@ -2,7 +2,6 @@ import React from 'react';
 import * as THREE from 'three';
 import PIXI from '../../ref/pixi.js';
 import dat from '../../ref/dat.gui.min.js';
-// import AnimationFilter from '../AnimationFilter/index'
 
 
 class Ruqia extends React.Component {
@@ -46,6 +45,7 @@ class Ruqia extends React.Component {
     }
 
     componentDidMount = () => {
+
     }
 
     playShaderAnimation() {
