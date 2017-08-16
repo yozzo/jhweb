@@ -332,8 +332,6 @@ class AnimationFilter extends React.Component {
         }
 
         handleVideo();
-
-        console.log(state);
         onHashChange();
     }
 
