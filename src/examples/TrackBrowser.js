@@ -54,7 +54,7 @@ const songs = [
         slug: 'mhope',
 
         track: {
-            name: '03/ MHope',
+            name: 'MHope',
             audioData: 'data/JSON/03.json',
             spotifyUrl: 'https://jamesheather.lnk.to/mhope'
         }
@@ -142,20 +142,21 @@ const TrackBrowser = ({ params }) => {
     let activeExample = params.slug && songs.find(songs => songs.slug === params.slug),
         isMobile = isMobileCheck();
 
-
-    function AnimationSwitch(activeExample) {
-        if (!isMobile) {
-            return <AnimationFilter activeTrack={activeExample.activeTrack}/>;
-        }
-
-        return <div>&nbsp;</div>;
+    if (!isMobile) {
+        return (
+            <div>
+                {/*<TrackViewer example={activeExample} />*/}
+                <AudioPlayer songs={songs} activeTrack={activeExample} isMobile={isMobile}/>
+                <AnimationFilter activeTrack={activeExample}/>
+            </div>
+        );
     }
 
     return (
         <div>
             {/*<TrackViewer example={activeExample} />*/}
             <AudioPlayer songs={songs} activeTrack={activeExample} isMobile={isMobile}/>
-            <AnimationFilter activeTrack={activeExample}/>
+            <div>&nbsp;</div>
         </div>
     );
 };

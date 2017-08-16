@@ -778,14 +778,14 @@ body {
         top: 0;
     }
 
-    #canvas {
-        z-index: 1;
+    body {
+        background: url('../data/mobile-bg.jpg') no-repeat #000000;
+        background-size: cover;
     }
 
-    //body {
-    //    background: url('../data/mobile-bg.jpg') no-repeat #000000;
-    //    background-size: cover;
-    //}
+    #canvas {
+        display: none;
+    }
 
 }
 @media screen and (min-width: 40em) {

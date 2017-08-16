@@ -564,8 +564,12 @@ body {
   .subscribe__links {
     top: 0; }
 
+  body {
+    background: url("../data/mobile-bg.jpg") no-repeat #000000;
+    background-size: cover; }
+
   #canvas {
-    z-index: 1; } }
+    display: none; } }
 @media screen and (min-width: 40em) {
   .subscribe__links {
     bottom: 0; }
