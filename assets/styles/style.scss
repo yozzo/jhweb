@@ -1,5 +1,6 @@
 @import "../fonts/stylesheet.css";
 @import "includes/variables";
+@import "includes/data-uri";
 
 body {
     background-color: gray;
@@ -771,11 +772,77 @@ body {
     display: inline;
     bottom: 0;
     right: 0;
+
+    .links {
+        &__item {
+            display: inline-block;
+
+            .item__link {
+                display: block;
+                width: 20px;
+                height:20px;
+
+                @media screen and (max-width: 480px) {
+                    margin-right: 10px;
+                }
+
+                @media screen and (max-width: 374px) {
+                    margin-right: 4px;
+                }
+
+                margin-right: 12px;
+
+                &.twitter {
+                    background: url($uri-twitter-k) no-repeat;
+                    background-size: contain;
+                    background-position: center;
+                }
+
+                &.facebook {
+                    background: url($uri-facebook-k) no-repeat;
+                    background-size: contain;
+                    background-position: center;
+                }
+
+                &.youtube {
+                    background: url($uri-youtube-k) no-repeat;
+                    background-size: contain;
+                    background-position: center;
+                }
+
+                &.soundcloud {
+                    background: url($uri-soundcloud-k) no-repeat;
+                    background-size: contain;
+                    width: 40px;
+                    background-position: center;
+                }
+
+                &.bandcamp {
+                    background: url($uri-bandcamp-k) no-repeat;
+                    background-size: contain;
+                    background-position: center;
+                }
+
+                &.instagram {
+                    background: url($uri-instagram-k) no-repeat;
+                    background-size: contain;
+                    background-position: center;
+                }
+
+                &:hover {
+                    opacity: 0.8;
+                }
+            }
+        }
+    }
 }
 
 @media screen and (max-width: 39.9375em) {
     .subscribe__links {
         top: 0;
+        &.social {
+            top: 35px;
+        }
     }
 
     body {
@@ -791,6 +858,10 @@ body {
 @media screen and (min-width: 40em) {
     .subscribe__links {
         bottom: 0;
+
+        &.social {
+            bottom: 35px;
+        }
     }
 
     #absolute {
